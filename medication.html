@@ -29,22 +29,11 @@
         <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
       </header>
 
-      <section class="content">
-        <h1>Medication Management</h1>
-        <div class="sub">MAR tracking, administration tasks, refills and medication changes.</div>
-        <div class="actions">
-          <button class="btn" type="button" onclick="openForm('medications')">+ Add Medication</button>
-          <a class="btn secondary" href="index.html">Back to Dashboard</a>
-        </div>
-        <div class="notice"><b>Review medication tasks before the next administration window.</b></div>
-        <div class="card table-wrap">
-          <table>
-            <thead>
-              <tr><th>Client</th><th>Medication</th><th>Schedule</th><th>Last MAR</th><th>Status</th><th>Action</th></tr>
-            </thead>
-            <tbody id="medicationRows"></tbody>
-          </table>
-        </div>
+      <section class="content mar-page">
+        <div class="mar-heading"><div><div class="eyebrow">Medication record</div><h1>Today's MAR</h1><div class="sub">Wednesday, September 9, 2026 · Administration record for all residents</div></div><div class="mar-heading-actions"><button class="btn secondary" type="button" onclick="showAuditLog()">View audit log</button><button class="btn" type="button" onclick="openForm('medications')">+ Add medication</button></div></div>
+        <div class="mar-toolbar"><div class="mar-tabs" role="tablist" aria-label="MAR filters"><button class="mar-tab active" type="button" data-mar-filter="all">All doses <span id="marAllCount">0</span></button><button class="mar-tab" type="button" data-mar-filter="due">Due now <span id="marDueCount">0</span></button><button class="mar-tab" type="button" data-mar-filter="prn">PRN <span id="marPrnCount">0</span></button></div><label class="mar-search"><span>⌕</span><input id="marSearch" type="search" placeholder="Search resident or medication"></label></div>
+        <div class="mar-summary" id="marSummary"></div>
+        <div class="mar-layout"><div class="mar-list card"><div class="mar-list-header"><div><h2>Administration schedule</h2><p id="marUpdated">Updated just now</p></div><span class="live-dot">● Live today</span></div><div id="marRows"></div></div><aside class="mar-side"><div class="card safety-card"><div class="side-title"><span class="shield">✓</span><h3>Safety checks</h3></div><div id="safetyChecks"></div></div><div class="card audit-card"><div class="side-title"><h3>Recent activity</h3><button class="action-link" type="button" onclick="showAuditLog()">See all</button></div><div id="auditRows"></div></div></aside></div>
       </section>
 
       <div id="recordModal" class="modal" aria-hidden="true">
@@ -64,5 +53,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('[data-mar-filter]').forEach(function (button) { button.addEventListener('click', function () { document.querySelectorAll('[data-mar-filter]').forEach(function (item) { item.classList.remove('active'); }); button.classList.add('active'); window.marFilter = button.dataset.marFilter; renderTodaysMAR(window.marMedications || []); }); });
+      document.getElementById('marSearch').addEventListener('input', function () { window.marQuery = this.value; renderTodaysMAR(window.marMedications || []); });
+    });
+  </script>
 </body>
 </html>
