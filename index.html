@@ -47,7 +47,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app auth-loading">
 <aside class="sidebar">
   <div class="logo">Care<span>One</span></div>
   <div class="home">Workspace</div>
@@ -70,7 +70,10 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 <main class="main">
 <header class="top">
   <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-  <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+  <div class="top-actions">
+    <div class="auth-links"><a href="signin.html">Sign In</a><a href="register.html">Register</a></div>
+    <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+  </div>
 </header>
 
 <section class="content">
@@ -184,6 +187,16 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const authClient = window.supabase.createClient(
+  "https://zsmilczlumqkdpthlpto.supabase.co",
+  "sb_publishable__Oq50W1WSRfYcae0StNicg_FrzPwRTB"
+);
+authClient.auth.getSession().then(({ data }) => {
+  if (data.session) document.querySelector('.app').classList.remove('auth-loading');
+  else window.location.replace('signin.html');
+});
+</script>
 <script src="app.js"></script>
 <!--
 const SUPABASE_URL = "https://zsmilczlumqkdpthlpto.supabase.co";
@@ -870,6 +883,5 @@ if (!supabaseClient) {
   console.warn('Supabase not loaded. Records are being saved locally in browser storage.');
 }
 -->
-
 </body>
 </html>

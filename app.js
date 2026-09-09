@@ -48,7 +48,7 @@ async function insertRecord(key, payload) {
 }
 
 function showPage(id, button) { document.querySelectorAll('.page').forEach(page => page.classList.toggle('active', page.id === id)); document.querySelectorAll('.nav button').forEach(item => item.classList.remove('active')); if (button) button.classList.add('active'); }
-function quickSearch(query) { const value = query.toLowerCase().trim(); if (!value) return; const row = [...document.querySelectorAll('#clientRows .card')].find(item => item.innerText.toLowerCase().includes(value)); if (row) { showPage('clients', document.querySelectorAll('.nav button')[1]); row.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
+function quickSearch(query) { const value = query.toLowerCase().trim(); if (!value) return; const rows = [...document.querySelectorAll('#clientRows .card, #caregiverRows .card')]; const row = rows.find(item => item.innerText.toLowerCase().includes(value)); if (row) { const page = row.closest('#caregiverRows') ? 'staff' : 'clients'; const button = document.querySelectorAll('.nav button')[page === 'staff' ? 2 : 1]; if (document.getElementById(page)) showPage(page, button); row.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
 function openForm(table) {
   const config = FORM_CONFIG[table]; if (!config) return alert('No form defined for this table yet.');
   document.getElementById('formFields').innerHTML = config.fields.map(([name, label, type, options]) => `<div class="field ${type === 'textarea' ? 'full' : ''}"><label for="${name}">${label}</label>${type === 'select' ? `<select id="${name}" name="${name}">${options.map(option => `<option value="${option}">${option}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea id="${name}" name="${name}"></textarea>` : `<input id="${name}" name="${name}" type="${type}"></div>`}`).join('');
@@ -63,7 +63,9 @@ function renderTable(id, rows, columns, key) { const root = document.getElementB
 
 function renderDashboard() {
   const { clients, caregivers, appointments, medications, schedules, finance } = dashboardData;
-  document.getElementById('dashboardKpis').innerHTML = [['Active clients', clients.length, '♙'],['Caregivers', caregivers.length, '♧'],['Medication alerts', medications.filter(item => /pending|due|attention|refill/i.test(`${item.status} ${item.last_mar}`)).length, '✚'],['Upcoming visits', appointments.length, '📅'],['Recorded revenue', '$' + finance.reduce((sum, item) => sum + (item.entry_type === 'expense' ? 0 : Number(item.amount || 0)), 0).toLocaleString(), '$']].map(([label, value, icon]) => `<div class="card stat"><div><div class="label">${label}</div><div class="num">${value}</div></div><div class="icon">${icon}</div></div>`).join('');
+  const dashboardKpis = document.getElementById('dashboardKpis');
+  if (!dashboardKpis) return;
+  dashboardKpis.innerHTML = [['Active clients', clients.length, '♙'],['Caregivers', caregivers.length, '♧'],['Medication alerts', medications.filter(item => /pending|due|attention|refill/i.test(`${item.status} ${item.last_mar}`)).length, '✚'],['Upcoming visits', appointments.length, '📅'],['Recorded revenue', '$' + finance.reduce((sum, item) => sum + (item.entry_type === 'expense' ? 0 : Number(item.amount || 0)), 0).toLocaleString(), '$']].map(([label, value, icon]) => `<div class="card stat"><div><div class="label">${label}</div><div class="num">${value}</div></div><div class="icon">${icon}</div></div>`).join('');
   document.getElementById('dashboardAgenda').innerHTML = appointments.slice(0, 4).map(item => `<div class="row"><div><b>${escapeHtml(item.client_name || 'Client visit')}</b><br><small class="label">${escapeHtml(item.reason_for_visit || 'Appointment')}</small></div>${badge('Upcoming')}</div>`).join('') || '<div class="list-empty">No upcoming appointments recorded.</div>';
   document.getElementById('dashboardAttention').innerHTML = medications.filter(item => /pending|due|attention|refill/i.test(`${item.status} ${item.last_mar}`)).slice(0, 4).map(item => `<div class="row"><b>${escapeHtml(item.medication_name || 'Medication task')}</b>${badge('Review')}</div>`).join('') || '<div class="list-empty">Nothing needs attention right now.</div>';
   document.getElementById('dashboardCoverage').innerHTML = `<div class="summary-row"><span class="label">Scheduled shifts</span><b>${schedules.length}</b></div><div class="progress"><i style="width:${caregivers.length ? Math.min(100, Math.round(schedules.length / caregivers.length * 100)) : 0}%"></i></div>`;
@@ -91,7 +93,8 @@ async function loadAll() {
   if (financeRows) financeRows.innerHTML = dashboardData.finance.map(item => `<div class="row"><span>${escapeHtml(item.category || item.notes || 'Finance record')}</span><b>${item.entry_type === 'expense' ? '-' : '+'}$${Math.abs(Number(item.amount || 0)).toLocaleString()}</b></div>`).join('') || '<div class="row"><span>No finance records found</span></div>';
   renderDashboard();
   renderReports();
-  document.getElementById('databaseTables').innerHTML = Object.values(TABLE_ALIASES).flat().map(name => `<span class="db-tag">${name}</span>`).join('');
+  const databaseTables = document.getElementById('databaseTables');
+  if (databaseTables) databaseTables.innerHTML = Object.values(TABLE_ALIASES).flat().map(name => `<span class="db-tag">${name}</span>`).join('');
 }
 async function deleteRecord(key, id) { if (supabaseClient) { const name = await resolveTableName(key); try { await supabaseClient.from(name).delete().eq('id', id); } catch (_) {} } const rows = getLocalRecords(key).filter(item => String(item.id) !== String(id)); saveLocalRecords(key, rows); await loadAll(); }
 

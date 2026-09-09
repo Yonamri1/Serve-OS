@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - Appointments</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="staff.html">Caregivers</a>
+        <a class="nav button active" href="appointments.html">Appointments</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
+        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+      </header>
+
+      <section class="content">
+        <h1>Appointments</h1>
+        <div class="sub">Track client visits, reasons, location and contact details.</div>
+        <div class="actions">
+          <button class="btn" type="button" onclick="openForm('appointments')">+ Add Appointment</button>
+          <a class="btn secondary" href="index.html">Back to Dashboard</a>
+        </div>
+        <div class="card table-wrap">
+          <table>
+            <thead>
+              <tr><th>Client</th><th>Visit Reason</th><th>Location</th><th>Contact</th><th>Date &amp; Time</th><th>Notes</th><th>Action</th></tr>
+            </thead>
+            <tbody id="appointmentRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div id="recordModal" class="modal" aria-hidden="true">
+        <div class="modal-card">
+          <h3 id="modalTitle">Add record</h3>
+          <form id="recordForm">
+            <div id="formFields" class="form-grid"></div>
+            <div class="actions" style="margin-top:20px;justify-content:flex-end;">
+              <button type="button" class="btn secondary" onclick="closeModal()">Cancel</button>
+              <button type="submit" class="btn">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - Finance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="staff.html">Caregivers</a>
+        <a class="nav button" href="appointments.html">Appointments</a>
+        <a class="nav button" href="meal-plan.html">Meal Plans</a>
+        <a class="nav button active" href="finances.html">Finance</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
+        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+      </header>
+
+      <section class="content">
+        <h1>Finance</h1>
+        <div class="sub">Track revenue, expenses, invoices and monthly cash flow.</div>
+        <div class="actions">
+          <button class="btn" type="button" onclick="openForm('finance')">+ Add Finance Record</button>
+          <a class="btn secondary" href="index.html">Back to Dashboard</a>
+        </div>
+        <div class="kpi">
+          <div class="card"><div class="label">Revenue - August</div><div class="money">$18,420</div><div class="delta">+6.8%</div></div>
+          <div class="card"><div class="label">Expenses - August</div><div class="money">$9,780</div><div class="delta">+2.1%</div></div>
+          <div class="card"><div class="label">Net Cash Flow</div><div class="money">$8,640</div><div class="delta">Healthy</div></div>
+        </div>
+        <div class="cols">
+          <div class="card"><h3>Recent Transactions</h3><div id="financeRows" class="row-stack"></div></div>
+          <div class="card"><h3>Invoices</h3><div class="row"><span>Outstanding</span><b>$4,800</b></div><div class="row"><span>Due this week</span><b>$2,100</b></div><div class="row"><span>Paid this month</span><b>$16,320</b></div></div>
+        </div>
+      </section>
+
+      <div id="recordModal" class="modal" aria-hidden="true">
+        <div class="modal-card">
+          <h3 id="modalTitle">Add record</h3>
+          <form id="recordForm">
+            <div id="formFields" class="form-grid"></div>
+            <div class="actions" style="margin-top:20px;justify-content:flex-end;">
+              <button type="button" class="btn secondary" onclick="closeModal()">Cancel</button>
+              <button type="submit" class="btn">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
