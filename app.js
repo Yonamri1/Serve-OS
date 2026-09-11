@@ -50,7 +50,37 @@ async function insertRecord(key, payload) {
 }
 
 function showPage(id, button) { document.querySelectorAll('.page').forEach(page => page.classList.toggle('active', page.id === id)); document.querySelectorAll('.nav button').forEach(item => item.classList.remove('active')); if (button) button.classList.add('active'); }
-function quickSearch(query) { const value = query.toLowerCase().trim(); if (!value) return; const rows = [...document.querySelectorAll('#clientRows .card, #caregiverRows .card')]; const row = rows.find(item => item.innerText.toLowerCase().includes(value)); if (row) { const page = row.closest('#caregiverRows') ? 'staff' : 'clients'; const button = document.querySelectorAll('.nav button')[page === 'staff' ? 2 : 1]; if (document.getElementById(page)) showPage(page, button); row.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
+function matchesSearchValue(item, query) {
+  if (!query) return true;
+  const text = Object.values(item || {}).map(value => String(value ?? '')).join(' ').toLowerCase();
+  return text.includes(query);
+}
+function quickSearch(query) {
+  const value = query.toLowerCase().trim();
+  const clientList = document.getElementById('clientRows');
+  const caregiverList = document.getElementById('caregiverRows');
+  const filteredClients = value ? dashboardData.clients.filter(item => matchesSearchValue(item, value)) : dashboardData.clients;
+  const filteredCaregivers = value ? dashboardData.caregivers.filter(item => matchesSearchValue(item, value)) : dashboardData.caregivers;
+
+  if (clientList && dashboardData.clients) {
+    renderClients(filteredClients, dashboardData.appointments, dashboardData.medications, dashboardData.progressNotes || []);
+  }
+
+  if (caregiverList && dashboardData.caregivers) {
+    renderCaregivers(filteredCaregivers);
+  }
+
+  if (!value) return;
+
+  const rows = [...document.querySelectorAll('#clientRows .card, #caregiverRows .card')];
+  const match = rows.find(item => item.innerText.toLowerCase().includes(value));
+  if (match) {
+    const page = match.closest('#caregiverRows') ? 'staff' : 'clients';
+    const button = document.querySelectorAll('.nav button')[page === 'staff' ? 2 : 1];
+    if (document.getElementById(page)) showPage(page, button);
+    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
 function openForm(table) {
   const config = FORM_CONFIG[table]; if (!config) return alert('No form defined for this table yet.');
   document.getElementById('formFields').innerHTML = config.fields.map(([name, label, type, options]) => `<div class="field ${type === 'textarea' ? 'full' : ''}"><label for="${name}">${label}</label>${type === 'select' ? `<select id="${name}" name="${name}">${options.map(option => `<option value="${option}">${option}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea id="${name}" name="${name}"></textarea>` : `<input id="${name}" name="${name}" type="${type}"></div>`}`).join('');
@@ -61,6 +91,7 @@ function normalize(key, value) { const text = String(value).trim(); if (!text) r
 
 function renderClients(rows, appointments = [], medications = [], progressNotes = []) {
   const root = document.getElementById('clientRows');
+  if (!root) return;
   const upcoming = appointments.filter(item => item.appointment_datetime && new Date(item.appointment_datetime) >= new Date()).sort((a, b) => new Date(a.appointment_datetime) - new Date(b.appointment_datetime));
   root.innerHTML = rows.length ? rows.map((item, index) => {
     const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Client ${index + 1}`;
@@ -73,10 +104,10 @@ function renderClients(rows, appointments = [], medications = [], progressNotes 
     const medicationMarkup = clientMedications.length ? clientMedications.slice(0, 3).map(medication => `<div class="client-detail-row"><span>${escapeHtml(medication.medication_name || 'Medication')}</span><b>${escapeHtml(medication.schedule || medication.dosage || 'Scheduled')}</b></div>`).join('') : '<div class="client-empty">No medications on record</div>';
     const noteMarkup = latestNote ? `<p>${escapeHtml(latestNote.note)}</p><small>By ${escapeHtml(latestNote.staff_name || 'Staff member')} · ${escapeHtml(new Date(latestNote.recorded_at || latestNote.created_at).toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}))}</small>` : '<div class="client-empty">No progress notes yet</div>';
     return `<div class="card client-card"><div class="person"><div class="mini">${escapeHtml(name.split(' ').map(part => part[0]).join('').slice(0,2))}</div><div><b>${escapeHtml(name)}</b><br><small class="label">ID: ${id}</small></div>${badge(item.status || 'Stable')}</div><div class="client-section"><div class="client-section-title"><b>Upcoming appointments</b><span>${clientAppointments.length}</span></div>${appointmentMarkup}</div><div class="client-section"><div class="client-section-title"><b>Medications</b><span>${clientMedications.length}</span></div>${medicationMarkup}</div><div class="client-section progress-note"><div class="client-section-title"><b>Latest progress note</b><button class="action-link" type="button" onclick="openProgressNoteForm('${id}')">+ Add note</button></div>${noteMarkup}</div><div class="client-card-footer"><button class="row-delete-btn" type="button" onclick="deleteRecord('clients','${id}')">Delete client</button></div></div>`;
-  }).join('') : '<div class="card"><p class="label">No client records found.</p></div>';
+  }).join('') : '<div class="card"><p class="label">No matching client records found.</p></div>';
 }
 function openProgressNoteForm(clientId) { openForm('progress_notes'); const field = document.getElementById('client_id'); if (field) field.value = clientId; }
-function renderCaregivers(rows) { const root = document.getElementById('caregiverRows'); root.innerHTML = rows.length ? rows.map((item, index) => { const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Staff ${index + 1}`; const id = item.id || index + 1; return `<div class="card"><div class="person"><div class="mini">${escapeHtml(name.slice(0,2).toUpperCase())}</div><div><b>${escapeHtml(name)}</b><br><small class="label">${escapeHtml(item.role || 'Caregiver')} · ${escapeHtml(item.phone || 'No phone')}</small></div></div><div class="row"><span>Status</span>${badge(item.status || 'Certified')}</div><div class="row"><span></span><button class="row-delete-btn" type="button" onclick="deleteRecord('caregivers','${id}')">Delete</button></div></div>`; }).join('') : '<div class="card"><p class="label">No staff members found.</p></div>'; }
+function renderCaregivers(rows) { const root = document.getElementById('caregiverRows'); if (!root) return; root.innerHTML = rows.length ? rows.map((item, index) => { const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Staff ${index + 1}`; const id = item.id || index + 1; return `<div class="card"><div class="person"><div class="mini">${escapeHtml(name.slice(0,2).toUpperCase())}</div><div><b>${escapeHtml(name)}</b><br><small class="label">${escapeHtml(item.role || 'Caregiver')} · ${escapeHtml(item.phone || 'No phone')}</small></div></div><div class="row"><span>Status</span>${badge(item.status || 'Certified')}</div><div class="row"><span></span><button class="row-delete-btn" type="button" onclick="deleteRecord('caregivers','${id}')">Delete</button></div></div>`; }).join('') : '<div class="card"><p class="label">No matching staff members found.</p></div>'; }
 function renderTable(id, rows, columns, key) { const root = document.getElementById(id); if (!root) return; root.innerHTML = rows.length ? rows.map(item => { const recordId = item.id || Date.now(); return `<tr>${columns.map(column => `<td>${column.render ? column.render(item) : escapeHtml(item[column.key] || '—')}</td>`).join('')}<td><button class="row-delete-btn" type="button" onclick="deleteRecord('${key}','${recordId}')">Delete</button></td></tr>`; }).join('') : `<tr><td colspan="${columns.length + 1}">No records found.</td></tr>`; }
 
 function renderDashboard() {
