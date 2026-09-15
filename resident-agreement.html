@@ -213,11 +213,18 @@
       const params = new URLSearchParams(window.location.search);
       const saved = JSON.parse(localStorage.getItem('residentAgreements') || '[]');
       const clientName = params.get('clientName') || '';
-      const matching = saved.find(item => String(item.resident_name || '').toLowerCase() === clientName.toLowerCase());
+      const clientId = params.get('clientId') || '';
+      const matching = clientName
+        ? saved.find(item => String(item.resident_name || '').toLowerCase() === clientName.toLowerCase())
+        : null;
       const data = matching || JSON.parse(localStorage.getItem('residentAgreement') || '{}');
 
       if (clientName && !data.resident_name) {
         data.resident_name = clientName;
+      }
+
+      if (clientId && !data.client_id) {
+        data.client_id = clientId;
       }
 
       Object.entries(data).forEach(([key, value]) => {
@@ -227,6 +234,10 @@
           else field.value = value;
         }
       });
+
+      if (params.get('newResident') === 'true' && !clientName) {
+        form.reset();
+      }
     }
 
     function clearResidentAgreement() {

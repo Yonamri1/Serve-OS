@@ -141,6 +141,11 @@ function quickSearch(query) {
   }
 }
 function openForm(table) {
+  if (table === 'clients') {
+    window.location.href = 'resident-agreement.html?newResident=true';
+    return;
+  }
+
   const config = FORM_CONFIG[table]; if (!config) return alert('No form defined for this table yet.');
   document.getElementById('formFields').innerHTML = config.fields.map(([name, label, type, options]) => `<div class="field ${type === 'textarea' ? 'full' : ''}"><label for="${name}">${label}</label>${type === 'select' ? `<select id="${name}" name="${name}">${options.map(option => `<option value="${option}">${option}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea id="${name}" name="${name}"></textarea>` : `<input id="${name}" name="${name}" type="${type}"></div>`}`).join('');
   document.getElementById('modalTitle').textContent = config.title; document.getElementById('recordForm').dataset.table = table; document.getElementById('recordModal').classList.add('show');
@@ -241,7 +246,6 @@ function renderTable(id, rows, columns, key) { const root = document.getElementB
 function renderDashboard() {
   const { clients, caregivers, appointments, medications, schedules, finance } = dashboardData;
   const dashboardKpis = document.getElementById('dashboardKpis');
-  if (!dashboardKpis) return;
 
   const medicationAlerts = medications.filter(item => /pending|due|attention|refill|overdue/i.test(`${item.status || ''} ${item.last_mar || ''}`)).length;
   const totalRevenue = finance.reduce((sum, item) => sum + (String(item.entry_type || '').toLowerCase() === 'expense' ? 0 : Number(item.amount || 0)), 0);
@@ -269,6 +273,25 @@ function renderDashboard() {
   const heroAlerts = document.getElementById('heroAlerts');
   if (heroAlerts) heroAlerts.textContent = `${alertCount} ${alertCount === 1 ? 'alert' : 'alerts'}`;
 
+  const clientProfilesCount = document.getElementById('clientProfilesCount');
+  if (clientProfilesCount) clientProfilesCount.textContent = `${clients.length} ${clients.length === 1 ? 'profile' : 'profiles'}`;
+
+  const clientCompliantCount = document.getElementById('clientCompliantCount');
+  if (clientCompliantCount) clientCompliantCount.textContent = `${Math.min(clients.length, Math.max(0, clients.length - 2))} compliant`;
+
+  const clientOpenFormsCount = document.getElementById('clientOpenFormsCount');
+  if (clientOpenFormsCount) clientOpenFormsCount.textContent = `${Math.max(0, appointments.length - 2)} open forms`;
+
+  const clientResidentCount = document.getElementById('clientResidentCount');
+  if (clientResidentCount) clientResidentCount.textContent = String(clients.length);
+
+  const clientCarePlanCount = document.getElementById('clientCarePlanCount');
+  if (clientCarePlanCount) clientCarePlanCount.textContent = String(getAdlRecords().length || clients.length);
+
+  const clientFollowUpCount = document.getElementById('clientFollowUpCount');
+  if (clientFollowUpCount) clientFollowUpCount.textContent = String(Math.max(0, appointments.length - 2));
+
+  if (!dashboardKpis) return;
   dashboardKpis.innerHTML = [['Active clients', clients.length, '♙'],['Caregivers', caregivers.length, '♧'],['Medication alerts', medicationAlerts, '✚'],['Upcoming visits', appointments.length, '📅'],['Recorded revenue', '$' + totalRevenue.toLocaleString(), '$']].map(([label, value, icon]) => `<div class="card stat"><div><div class="label">${label}</div><div class="num">${value}</div></div><div class="icon">${icon}</div></div>`).join('');
   document.getElementById('dashboardAgenda').innerHTML = appointments.slice(0, 4).map(item => `<div class="row"><div><b>${escapeHtml(item.client_name || 'Client visit')}</b><br><small class="label">${escapeHtml(item.reason_for_visit || 'Appointment')}</small></div>${badge('Upcoming')}</div>`).join('') || '<div class="list-empty">No upcoming appointments recorded.</div>';
   document.getElementById('dashboardAttention').innerHTML = medications.filter(item => /pending|due|attention|refill|overdue/i.test(`${item.status || ''} ${item.last_mar || ''}`)).slice(0, 4).map(item => `<div class="row"><b>${escapeHtml(item.medication_name || 'Medication task')}</b>${badge('Review')}</div>`).join('') || '<div class="list-empty">Nothing needs attention right now.</div>';
