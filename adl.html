@@ -1,1073 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Resident Care Plan</title>
-
-<style>
-    * {
-        box-sizing: border-box;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - ADL Care Plan</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .adl-page {
+      background: transparent;
     }
 
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f3f4f6;
-        color: #222;
+    .adl-header {
+      margin-bottom: 18px;
     }
 
-    .container {
-        max-width: 1100px;
-        margin: 30px auto;
-        padding: 20px;
+    .adl-header h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+      color: var(--navy);
     }
 
-    .header {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ddd;
+    .adl-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    .header h1 {
-        margin: 0 0 8px;
-        font-size: 28px;
+    .adl-section {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 20px;
     }
 
-    .header p {
-        margin: 0;
-        color: #666;
+    .adl-section h2 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      color: var(--navy);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .section {
-        background: white;
-        padding: 22px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
+    .adl-section h3 {
+      margin: 18px 0 12px;
+      font-size: 16px;
+      color: var(--navy);
     }
 
-    .section h2 {
-        margin-top: 0;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #ddd;
-        font-size: 20px;
+    .adl-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
     }
 
-    .section h3 {
-        font-size: 16px;
-        margin-top: 22px;
+    .adl-grid .full {
+      grid-column: 1 / -1;
     }
 
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+    .adl-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    .grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
+    .adl-field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
     }
 
-    .field {
-        display: flex;
-        flex-direction: column;
+    .adl-field input,
+    .adl-field select,
+    .adl-field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fafbfd;
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--text);
     }
 
-    label {
-        font-weight: 600;
-        margin-bottom: 6px;
-        font-size: 14px;
+    .adl-field input:focus,
+    .adl-field select:focus,
+    .adl-field textarea:focus {
+      outline: 2px solid rgba(45, 108, 223, .14);
+      border-color: var(--blue);
     }
 
-    input,
-    select,
-    textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #bbb;
-        border-radius: 5px;
-        font-size: 14px;
-        background: white;
+    .adl-field textarea {
+      resize: vertical;
+      min-height: 100px;
     }
 
-    textarea {
-        min-height: 90px;
-        resize: vertical;
+    .adl-checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 10px;
     }
 
-    .full {
-        grid-column: 1 / -1;
+    .adl-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text);
     }
 
-    .checkbox-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+    .adl-checkbox-item input {
+      width: auto;
+      accent-color: var(--blue);
     }
 
-    .checkbox-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: normal;
+    .adl-table-wrap {
+      overflow-x: auto;
     }
 
-    .checkbox-item input {
-        width: auto;
+    table.adl-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+      margin-top: 10px;
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
+    table.adl-table th,
+    table.adl-table td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      vertical-align: top;
+      background: #fff;
     }
 
-    th,
-    td {
-        border: 1px solid #bbb;
-        padding: 8px;
-        vertical-align: top;
+    table.adl-table th {
+      background: #f7f9fc;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-size: 12px;
+      text-align: left;
     }
 
-    th {
-        background: #f0f0f0;
-        text-align: left;
-        font-size: 13px;
+    table.adl-table td input,
+    table.adl-table td textarea,
+    table.adl-table td select {
+      width: 100%;
+      min-width: 110px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 9px;
+      background: #fff;
     }
 
-    td input,
-    td textarea,
-    td select {
-        border: none;
-        border-radius: 0;
-        padding: 5px;
+    table.adl-table td textarea {
+      min-height: 80px;
+      resize: vertical;
     }
 
-    td textarea {
-        min-height: 70px;
+    .adl-notice {
+      background: #f8fafc;
+      border-left: 4px solid var(--blue);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
     }
 
-    .button-row {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-        flex-wrap: wrap;
+    .adl-button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
     }
 
-    button {
-        padding: 10px 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
+    .adl-signature-box {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fafbfd;
+      height: 80px;
+      margin-top: 4px;
     }
 
-    .primary {
-        background: #1f4e79;
-        color: white;
+    .adl-print-note {
+      display: none;
     }
 
-    .secondary {
-        background: #e5e7eb;
-        color: #222;
-    }
-
-    .danger {
-        background: #b42318;
-        color: white;
-    }
-
-    .signature-box {
-        height: 80px;
-        border: 1px solid #bbb;
-        border-radius: 5px;
-        margin-top: 5px;
-    }
-
-    .notice {
-        padding: 12px;
-        background: #f5f7fa;
-        border-left: 4px solid #1f4e79;
-        margin-bottom: 15px;
-        font-size: 14px;
-    }
-
-    .review-status {
-        padding: 10px;
-        background: #f8f8f8;
-        border-radius: 5px;
-        margin-top: 10px;
-    }
-
-    @media (max-width: 700px) {
-        .grid,
-        .grid-3,
-        .checkbox-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .container {
-            margin: 10px auto;
-            padding: 10px;
-        }
-
-        table {
-            font-size: 12px;
-        }
-
-        .section {
-            padding: 15px;
-        }
+    @media (max-width: 900px) {
+      .adl-grid,
+      .adl-checkbox-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media print {
-        body {
-            background: white;
-        }
+      .sidebar,
+      .top,
+      .adl-button-row,
+      .actions {
+        display: none !important;
+      }
 
-        .container {
-            max-width: none;
-            margin: 0;
-        }
+      .main {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
 
-        .button-row {
-            display: none;
-        }
+      .content {
+        padding: 0 !important;
+      }
 
-        .section {
-            border: 1px solid #999;
-            break-inside: avoid;
-        }
+      .adl-section {
+        box-shadow: none;
+        border: 1px solid #c8ced8;
+      }
+
+      body {
+        background: white;
+      }
     }
-</style>
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="staff.html">Caregivers</a>
+        <a class="nav button" href="appointments.html">Appointments</a>
+        <a class="nav button" href="meal-plan.html">Meal Plans</a>
+        <a class="nav button active" href="adl.html">ADL Care Plan</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
 
-<div class="container">
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search resident records…">
+        <div class="profile">
+          <div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div>
+          <div class="avatar">AM</div>
+        </div>
+      </header>
 
-    <div class="header">
-        <h1>Resident Care Plan</h1>
-        <p>Adult Foster Home — Individualized Resident Care Plan</p>
-    </div>
-
-    <!-- RESIDENT INFORMATION -->
-
-    <div class="section">
-
-        <h2>1. Resident Information</h2>
-
-        <div class="grid">
-
-            <div class="field">
-                <label>Resident Name</label>
-                <input type="text" id="residentName">
-            </div>
-
-            <div class="field">
-                <label>Date of Birth</label>
-                <input type="date" id="dob">
-            </div>
-
-            <div class="field">
-                <label>Date of Admission</label>
-                <input type="date" id="admissionDate">
-            </div>
-
-            <div class="field">
-                <label>Care Plan Date</label>
-                <input type="date" id="carePlanDate">
-            </div>
-
-            <div class="field">
-                <label>Next Review Date</label>
-                <input type="date" id="reviewDate">
-            </div>
-
-            <div class="field">
-                <label>Room</label>
-                <input type="text">
-            </div>
-
-            <div class="field full">
-                <label>Previous Living Arrangement</label>
-                <textarea></textarea>
-            </div>
-
+      <section class="content adl-page">
+        <div class="adl-header">
+          <h1>ADL & Resident Care Plan</h1>
+          <p>Adult Foster Home — individualized resident assessment and support plan</p>
         </div>
 
-    </div>
+        <div class="actions">
+          <button class="btn" type="button" onclick="saveForm()">Save draft</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Print care plan</button>
+          <button class="btn secondary" type="button" onclick="clearForm()">Clear form</button>
+        </div>
 
+        <form id="adlForm" novalidate>
+          <div class="adl-section">
+            <h2>1. Resident Information</h2>
+            <div class="adl-grid">
+              <div class="adl-field">
+                <label for="residentName">Resident Name</label>
+                <input id="residentName" name="residentName" type="text">
+              </div>
+              <div class="adl-field">
+                <label for="dob">Date of Birth</label>
+                <input id="dob" name="dob" type="date">
+              </div>
+              <div class="adl-field">
+                <label for="admissionDate">Date of Admission</label>
+                <input id="admissionDate" name="admissionDate" type="date">
+              </div>
+              <div class="adl-field">
+                <label for="carePlanDate">Care Plan Date</label>
+                <input id="carePlanDate" name="carePlanDate" type="date">
+              </div>
+              <div class="adl-field">
+                <label for="reviewDate">Next Review Date</label>
+                <input id="reviewDate" name="reviewDate" type="date">
+              </div>
+              <div class="adl-field">
+                <label for="roomNumber">Room</label>
+                <input id="roomNumber" name="roomNumber" type="text">
+              </div>
+              <div class="adl-field full">
+                <label for="previousLivingArrangement">Previous Living Arrangement</label>
+                <textarea id="previousLivingArrangement" name="previousLivingArrangement"></textarea>
+              </div>
+            </div>
+          </div>
 
-    <!-- CONTACTS -->
-
-    <div class="section">
-
-        <h2>2. Important Contacts</h2>
-
-        <table>
-
-            <thead>
-                <tr>
+          <div class="adl-section">
+            <h2>2. Important Contacts</h2>
+            <div class="adl-table-wrap">
+              <table class="adl-table">
+                <thead>
+                  <tr>
                     <th>Contact / Role</th>
                     <th>Name</th>
                     <th>Relationship</th>
                     <th>Phone</th>
                     <th>Email</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <tr>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
                     <td>Emergency Contact</td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="tel"></td>
-                    <td><input type="email"></td>
-                </tr>
-
-                <tr>
+                    <td><input type="text" name="emergencyName"></td>
+                    <td><input type="text" name="emergencyRelation"></td>
+                    <td><input type="tel" name="emergencyPhone"></td>
+                    <td><input type="email" name="emergencyEmail"></td>
+                  </tr>
+                  <tr>
                     <td>Primary Care Provider</td>
-                    <td><input type="text"></td>
-                    <td>Medical Provider</td>
-                    <td><input type="tel"></td>
-                    <td><input type="email"></td>
-                </tr>
-
-                <tr>
+                    <td><input type="text" name="providerName"></td>
+                    <td><input type="text" name="providerRelation" value="Medical Provider"></td>
+                    <td><input type="tel" name="providerPhone"></td>
+                    <td><input type="email" name="providerEmail"></td>
+                  </tr>
+                  <tr>
                     <td>Case Manager</td>
-                    <td><input type="text"></td>
-                    <td>Case Manager</td>
-                    <td><input type="tel"></td>
-                    <td><input type="email"></td>
-                </tr>
-
-                <tr>
+                    <td><input type="text" name="caseManagerName"></td>
+                    <td><input type="text" name="caseManagerRelation" value="Case Manager"></td>
+                    <td><input type="tel" name="caseManagerPhone"></td>
+                    <td><input type="email" name="caseManagerEmail"></td>
+                  </tr>
+                  <tr>
                     <td>Legal Representative / Guardian</td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="tel"></td>
-                    <td><input type="email"></td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <!-- PERSON CENTERED INFORMATION -->
-
-    <div class="section">
-
-        <h2>3. Resident Preferences and Person-Centered Information</h2>
-
-        <div class="grid">
-
-            <div class="field full">
-                <label>What is important to the resident?</label>
-                <textarea
-                    placeholder="Describe routines, relationships, activities, cultural preferences, spiritual preferences, personal interests, etc."></textarea>
+                    <td><input type="text" name="guardianName"></td>
+                    <td><input type="text" name="guardianRelation"></td>
+                    <td><input type="tel" name="guardianPhone"></td>
+                    <td><input type="email" name="guardianEmail"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
 
-            <div class="field full">
-                <label>Resident's strengths and abilities</label>
-                <textarea></textarea>
+          <div class="adl-section">
+            <h2>3. Resident Preferences and Person-Centered Information</h2>
+            <div class="adl-grid">
+              <div class="adl-field full">
+                <label for="importantToResident">What is important to the resident?</label>
+                <textarea id="importantToResident" name="importantToResident" placeholder="Describe routines, relationships, activities, cultural preferences, spiritual preferences, personal interests, etc."></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="strengthsAbilities">Resident strengths and abilities</label>
+                <textarea id="strengthsAbilities" name="strengthsAbilities"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="dailyRoutine">Resident preferences for daily routine</label>
+                <textarea id="dailyRoutine" name="dailyRoutine"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="goalsOutcomes">Resident goals and desired outcomes</label>
+                <textarea id="goalsOutcomes" name="goalsOutcomes"></textarea>
+              </div>
             </div>
+          </div>
 
-            <div class="field full">
-                <label>Resident's preferences for daily routine</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Resident's goals and desired outcomes</label>
-                <textarea></textarea>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ASSESSMENT -->
-
-    <div class="section">
-
-        <h2>4. Assessment of Care Needs</h2>
-
-        <div class="notice">
-            Identify the resident's current abilities, limitations, risks, preferences,
-            and level of assistance required.
-        </div>
-
-        <table>
-
-            <thead>
-                <tr>
+          <div class="adl-section">
+            <h2>4. Assessment of Care Needs</h2>
+            <div class="adl-notice">Identify the resident's current abilities, limitations, risks, preferences, and level of assistance required.</div>
+            <div class="adl-table-wrap">
+              <table class="adl-table">
+                <thead>
+                  <tr>
                     <th>Care Area</th>
                     <th>Independent</th>
                     <th>Needs Assistance</th>
                     <th>Dependent</th>
                     <th>Description / Instructions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <tr>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
                     <td>Bathing</td>
-                    <td><input type="radio" name="bathing"></td>
-                    <td><input type="radio" name="bathing"></td>
-                    <td><input type="radio" name="bathing"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="bathing" value="independent"></td>
+                    <td><input type="radio" name="bathing" value="assistance"></td>
+                    <td><input type="radio" name="bathing" value="dependent"></td>
+                    <td><textarea name="bathingNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Dressing</td>
-                    <td><input type="radio" name="dressing"></td>
-                    <td><input type="radio" name="dressing"></td>
-                    <td><input type="radio" name="dressing"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="dressing" value="independent"></td>
+                    <td><input type="radio" name="dressing" value="assistance"></td>
+                    <td><input type="radio" name="dressing" value="dependent"></td>
+                    <td><textarea name="dressingNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Grooming</td>
-                    <td><input type="radio" name="grooming"></td>
-                    <td><input type="radio" name="grooming"></td>
-                    <td><input type="radio" name="grooming"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="grooming" value="independent"></td>
+                    <td><input type="radio" name="grooming" value="assistance"></td>
+                    <td><input type="radio" name="grooming" value="dependent"></td>
+                    <td><textarea name="groomingNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Toileting</td>
-                    <td><input type="radio" name="toileting"></td>
-                    <td><input type="radio" name="toileting"></td>
-                    <td><input type="radio" name="toileting"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="toileting" value="independent"></td>
+                    <td><input type="radio" name="toileting" value="assistance"></td>
+                    <td><input type="radio" name="toileting" value="dependent"></td>
+                    <td><textarea name="toiletingNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Eating / Feeding</td>
-                    <td><input type="radio" name="eating"></td>
-                    <td><input type="radio" name="eating"></td>
-                    <td><input type="radio" name="eating"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="eating" value="independent"></td>
+                    <td><input type="radio" name="eating" value="assistance"></td>
+                    <td><input type="radio" name="eating" value="dependent"></td>
+                    <td><textarea name="eatingNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Mobility / Transfers</td>
-                    <td><input type="radio" name="mobility"></td>
-                    <td><input type="radio" name="mobility"></td>
-                    <td><input type="radio" name="mobility"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="mobility" value="independent"></td>
+                    <td><input type="radio" name="mobility" value="assistance"></td>
+                    <td><input type="radio" name="mobility" value="dependent"></td>
+                    <td><textarea name="mobilityNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Medication Management</td>
-                    <td><input type="radio" name="medication"></td>
-                    <td><input type="radio" name="medication"></td>
-                    <td><input type="radio" name="medication"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="medication" value="independent"></td>
+                    <td><input type="radio" name="medication" value="assistance"></td>
+                    <td><input type="radio" name="medication" value="dependent"></td>
+                    <td><textarea name="medicationNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Communication</td>
-                    <td><input type="radio" name="communication"></td>
-                    <td><input type="radio" name="communication"></td>
-                    <td><input type="radio" name="communication"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="communication" value="independent"></td>
+                    <td><input type="radio" name="communication" value="assistance"></td>
+                    <td><input type="radio" name="communication" value="dependent"></td>
+                    <td><textarea name="communicationNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Behavioral / Emotional Support</td>
-                    <td><input type="radio" name="behavior"></td>
-                    <td><input type="radio" name="behavior"></td>
-                    <td><input type="radio" name="behavior"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-                <tr>
+                    <td><input type="radio" name="behavior" value="independent"></td>
+                    <td><input type="radio" name="behavior" value="assistance"></td>
+                    <td><input type="radio" name="behavior" value="dependent"></td>
+                    <td><textarea name="behaviorNotes"></textarea></td>
+                  </tr>
+                  <tr>
                     <td>Community Activities</td>
-                    <td><input type="radio" name="community"></td>
-                    <td><input type="radio" name="community"></td>
-                    <td><input type="radio" name="community"></td>
-                    <td><textarea></textarea></td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <!-- MEDICAL -->
-
-    <div class="section">
-
-        <h2>5. Medical and Health Needs</h2>
-
-        <div class="grid">
-
-            <div class="field full">
-                <label>Medical Diagnoses / Conditions</label>
-                <textarea></textarea>
+                    <td><input type="radio" name="community" value="independent"></td>
+                    <td><input type="radio" name="community" value="assistance"></td>
+                    <td><input type="radio" name="community" value="dependent"></td>
+                    <td><textarea name="communityNotes"></textarea></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
 
-            <div class="field full">
-                <label>Allergies</label>
-                <textarea></textarea>
+          <div class="adl-section">
+            <h2>5. Medical and Health Needs</h2>
+            <div class="adl-grid">
+              <div class="adl-field full">
+                <label for="medicalDiagnoses">Medical Diagnoses / Conditions</label>
+                <textarea id="medicalDiagnoses" name="medicalDiagnoses"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="allergies">Allergies</label>
+                <textarea id="allergies" name="allergies"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="specialDiet">Special Diet / Nutrition Requirements</label>
+                <textarea id="specialDiet" name="specialDiet"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="physicianOrders">Physician / NP Orders</label>
+                <textarea id="physicianOrders" name="physicianOrders"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="nursingInstructions">Nursing Instructions / Delegations</label>
+                <textarea id="nursingInstructions" name="nursingInstructions"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="otherHealthConsiderations">Other Health and Safety Considerations</label>
+                <textarea id="otherHealthConsiderations" name="otherHealthConsiderations"></textarea>
+              </div>
             </div>
+          </div>
 
-            <div class="field full">
-                <label>Special Diet / Nutrition Requirements</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Physician / NP Orders</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Nursing Instructions / Delegations</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Other Health and Safety Considerations</label>
-                <textarea></textarea>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- MEDICATION -->
-
-    <div class="section">
-
-        <h2>6. Medication Support</h2>
-
-        <table id="medicationTable">
-
-            <thead>
-                <tr>
+          <div class="adl-section">
+            <h2>6. Medication Support</h2>
+            <div class="adl-table-wrap">
+              <table id="medicationTable" class="adl-table">
+                <thead>
+                  <tr>
                     <th>Medication</th>
                     <th>Dose</th>
                     <th>Route</th>
                     <th>Frequency</th>
                     <th>Purpose</th>
                     <th>Special Instructions</th>
-                </tr>
-            </thead>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" name="medicationName_1"></td>
+                    <td><input type="text" name="medicationDose_1"></td>
+                    <td><input type="text" name="medicationRoute_1"></td>
+                    <td><input type="text" name="medicationFrequency_1"></td>
+                    <td><input type="text" name="medicationPurpose_1"></td>
+                    <td><input type="text" name="medicationInstructions_1"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="adl-button-row">
+              <button class="btn secondary" type="button" onclick="addMedication()">+ Add Medication</button>
+            </div>
+          </div>
 
-            <tbody>
-
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-        <div class="button-row">
-            <button class="secondary" onclick="addMedication()">
-                + Add Medication
-            </button>
-        </div>
-
-    </div>
-
-
-    <!-- CARE GOALS -->
-
-    <div class="section">
-
-        <h2>7. Individualized Care Goals and Interventions</h2>
-
-        <div class="notice">
-            Each identified need should have a corresponding goal, intervention,
-            responsible person, and method for monitoring progress.
-        </div>
-
-        <table id="goalTable">
-
-            <thead>
-
-                <tr>
+          <div class="adl-section">
+            <h2>7. Individualized Care Goals and Interventions</h2>
+            <div class="adl-notice">Each identified need should have a corresponding goal, intervention, responsible person, and method for monitoring progress.</div>
+            <div class="adl-table-wrap">
+              <table id="goalTable" class="adl-table">
+                <thead>
+                  <tr>
                     <th>Identified Need / Problem</th>
                     <th>Goal / Desired Outcome</th>
                     <th>Staff Intervention / Support</th>
                     <th>Frequency</th>
                     <th>Responsible Person</th>
                     <th>How Progress Will Be Measured</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <tr>
-
-                    <td>
-                        <textarea></textarea>
-                    </td>
-
-                    <td>
-                        <textarea></textarea>
-                    </td>
-
-                    <td>
-                        <textarea></textarea>
-                    </td>
-
-                    <td>
-                        <input type="text">
-                    </td>
-
-                    <td>
-                        <input type="text">
-                    </td>
-
-                    <td>
-                        <textarea></textarea>
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-        <div class="button-row">
-
-            <button class="secondary" onclick="addGoal()">
-                + Add Care Goal
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- SAFETY -->
-
-    <div class="section">
-
-        <h2>8. Safety and Risk Management</h2>
-
-        <h3>Identified Risks</h3>
-
-        <div class="checkbox-grid">
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Fall Risk
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Elopement / Wandering
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Choking
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Medication Risk
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Behavioral Risk
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Infection Risk
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Skin Integrity Risk
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox">
-                Other
-            </label>
-
-        </div>
-
-        <div class="grid" style="margin-top:20px;">
-
-            <div class="field full">
-                <label>Risk Prevention / Safety Plan</label>
-                <textarea></textarea>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><textarea name="goalNeed_1"></textarea></td>
+                    <td><textarea name="goalOutcome_1"></textarea></td>
+                    <td><textarea name="goalIntervention_1"></textarea></td>
+                    <td><input type="text" name="goalFrequency_1"></td>
+                    <td><input type="text" name="goalPerson_1"></td>
+                    <td><textarea name="goalMeasure_1"></textarea></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
-            <div class="field full">
-                <label>Emergency Procedures Specific to Resident</label>
-                <textarea></textarea>
+            <div class="adl-button-row">
+              <button class="btn secondary" type="button" onclick="addGoal()">+ Add Care Goal</button>
             </div>
+          </div>
 
-        </div>
-
-    </div>
-
-
-    <!-- ACTIVITIES -->
-
-    <div class="section">
-
-        <h2>9. Activities and Community Participation</h2>
-
-        <div class="grid">
-
-            <div class="field full">
-                <label>Preferred Activities</label>
-                <textarea></textarea>
+          <div class="adl-section">
+            <h2>8. Safety and Risk Management</h2>
+            <h3>Identified Risks</h3>
+            <div class="adl-checkbox-grid">
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskFall">Fall Risk</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskElopement">Elopement / Wandering</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskChoking">Choking</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskMedication">Medication Risk</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskBehavioral">Behavioral Risk</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskInfection">Infection Risk</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskSkin">Skin Integrity Risk</label>
+              <label class="adl-checkbox-item"><input type="checkbox" name="riskOther">Other</label>
             </div>
-
-            <div class="field full">
-                <label>Community Participation Goals</label>
-                <textarea></textarea>
+            <div class="adl-grid" style="margin-top:18px;">
+              <div class="adl-field full">
+                <label for="riskPlan">Risk Prevention / Safety Plan</label>
+                <textarea id="riskPlan" name="riskPlan"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="emergencyProcedures">Emergency Procedures Specific to Resident</label>
+                <textarea id="emergencyProcedures" name="emergencyProcedures"></textarea>
+              </div>
             </div>
+          </div>
 
-            <div class="field full">
-                <label>Social / Recreational Preferences</label>
-                <textarea></textarea>
+          <div class="adl-section">
+            <h2>9. Activities and Community Participation</h2>
+            <div class="adl-grid">
+              <div class="adl-field full">
+                <label for="preferredActivities">Preferred Activities</label>
+                <textarea id="preferredActivities" name="preferredActivities"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="communityGoals">Community Participation Goals</label>
+                <textarea id="communityGoals" name="communityGoals"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="socialPreferences">Social / Recreational Preferences</label>
+                <textarea id="socialPreferences" name="socialPreferences"></textarea>
+              </div>
             </div>
+          </div>
 
-        </div>
-
-    </div>
-
-
-    <!-- CARE TEAM -->
-
-    <div class="section">
-
-        <h2>10. Care Team Responsibilities</h2>
-
-        <table>
-
-            <thead>
-
-                <tr>
+          <div class="adl-section">
+            <h2>10. Care Team Responsibilities</h2>
+            <div class="adl-table-wrap">
+              <table class="adl-table">
+                <thead>
+                  <tr>
                     <th>Person / Organization</th>
                     <th>Role</th>
                     <th>Responsibilities</th>
                     <th>Contact</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><textarea></textarea></td>
-                    <td><input type="text"></td>
-                </tr>
-
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><textarea></textarea></td>
-                    <td><input type="text"></td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <!-- REVIEW -->
-
-    <div class="section">
-
-        <h2>11. Care Plan Review</h2>
-
-        <div class="grid">
-
-            <div class="field">
-                <label>Review Date</label>
-                <input type="date">
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" name="teamPerson_1"></td>
+                    <td><input type="text" name="teamRole_1"></td>
+                    <td><textarea name="teamResponsibility_1"></textarea></td>
+                    <td><input type="text" name="teamContact_1"></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" name="teamPerson_2"></td>
+                    <td><input type="text" name="teamRole_2"></td>
+                    <td><textarea name="teamResponsibility_2"></textarea></td>
+                    <td><input type="text" name="teamContact_2"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
 
-            <div class="field">
-                <label>Review Type</label>
-
-                <select>
-
-                    <option>Initial Care Plan</option>
-                    <option>Six-Month Review</option>
-                    <option>Change in Condition</option>
-                    <option>Significant Change</option>
-                    <option>Other</option>
-
+          <div class="adl-section">
+            <h2>11. Care Plan Review</h2>
+            <div class="adl-grid">
+              <div class="adl-field">
+                <label for="reviewDateField">Review Date</label>
+                <input id="reviewDateField" name="reviewDateField" type="date">
+              </div>
+              <div class="adl-field">
+                <label for="reviewType">Review Type</label>
+                <select id="reviewType" name="reviewType">
+                  <option>Initial Care Plan</option>
+                  <option>Six-Month Review</option>
+                  <option>Change in Condition</option>
+                  <option>Significant Change</option>
+                  <option>Other</option>
                 </select>
-
+              </div>
+              <div class="adl-field full">
+                <label for="changesInNeeds">Changes in Resident Needs</label>
+                <textarea id="changesInNeeds" name="changesInNeeds"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="goalsAchieved">Goals Achieved</label>
+                <textarea id="goalsAchieved" name="goalsAchieved"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="continuedSupport">Goals Requiring Continued Support</label>
+                <textarea id="continuedSupport" name="continuedSupport"></textarea>
+              </div>
+              <div class="adl-field full">
+                <label for="changesToCarePlan">Changes to Care Plan</label>
+                <textarea id="changesToCarePlan" name="changesToCarePlan"></textarea>
+              </div>
             </div>
+          </div>
 
-            <div class="field full">
-                <label>Changes in Resident Needs</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Goals Achieved</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Goals Requiring Continued Support</label>
-                <textarea></textarea>
-            </div>
-
-            <div class="field full">
-                <label>Changes to Care Plan</label>
-                <textarea></textarea>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- SIGNATURES -->
-
-    <div class="section">
-
-        <h2>12. Acknowledgment and Signatures</h2>
-
-        <div class="notice">
-            The care plan should be developed with appropriate participation
-            from the resident and relevant members of the care team.
-        </div>
-
-        <div class="grid">
-
-            <div class="field">
-                <label>Resident / Representative Name</label>
-                <input type="text">
-            </div>
-
-            <div class="field">
-                <label>Date</label>
-                <input type="date">
-            </div>
-
-            <div class="field full">
+          <div class="adl-section">
+            <h2>12. Acknowledgment and Signatures</h2>
+            <div class="adl-notice">The care plan should be developed with appropriate participation from the resident and relevant members of the care team.</div>
+            <div class="adl-grid">
+              <div class="adl-field">
+                <label for="residentSignerName">Resident / Representative Name</label>
+                <input id="residentSignerName" name="residentSignerName" type="text">
+              </div>
+              <div class="adl-field">
+                <label for="residentSignerDate">Date</label>
+                <input id="residentSignerDate" name="residentSignerDate" type="date">
+              </div>
+              <div class="adl-field full">
                 <label>Resident / Representative Signature</label>
-                <div class="signature-box"></div>
-            </div>
+                <div class="adl-signature-box"></div>
+              </div>
 
-
-            <div class="field">
-                <label>Provider / Caregiver Name</label>
-                <input type="text">
-            </div>
-
-            <div class="field">
-                <label>Date</label>
-                <input type="date">
-            </div>
-
-            <div class="field full">
+              <div class="adl-field">
+                <label for="providerSignerName">Provider / Caregiver Name</label>
+                <input id="providerSignerName" name="providerSignerName" type="text">
+              </div>
+              <div class="adl-field">
+                <label for="providerSignerDate">Date</label>
+                <input id="providerSignerDate" name="providerSignerDate" type="date">
+              </div>
+              <div class="adl-field full">
                 <label>Provider / Caregiver Signature</label>
-                <div class="signature-box"></div>
-            </div>
+                <div class="adl-signature-box"></div>
+              </div>
 
-
-            <div class="field">
-                <label>Case Manager / Other Participant</label>
-                <input type="text">
-            </div>
-
-            <div class="field">
-                <label>Date</label>
-                <input type="date">
-            </div>
-
-            <div class="field full">
+              <div class="adl-field">
+                <label for="managerSignerName">Case Manager / Other Participant</label>
+                <input id="managerSignerName" name="managerSignerName" type="text">
+              </div>
+              <div class="adl-field">
+                <label for="managerSignerDate">Date</label>
+                <input id="managerSignerDate" name="managerSignerDate" type="date">
+              </div>
+              <div class="adl-field full">
                 <label>Signature</label>
-                <div class="signature-box"></div>
+                <div class="adl-signature-box"></div>
+              </div>
             </div>
+          </div>
 
-        </div>
+          <div class="adl-button-row">
+            <button class="btn" type="button" onclick="saveForm()">Save draft</button>
+            <button class="btn secondary" type="button" onclick="window.print()">Print care plan</button>
+            <button class="btn secondary" type="button" onclick="clearForm()">Clear form</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
 
-    </div>
-
-
-    <!-- BUTTONS -->
-
-    <div class="button-row">
-
-        <button class="primary" onclick="window.print()">
-            Print Care Plan
-        </button>
-
-        <button class="secondary" onclick="saveForm()">
-            Save Draft
-        </button>
-
-        <button class="secondary" onclick="clearForm()">
-            Clear Form
-        </button>
-
-    </div>
-
-</div>
-
-
-<script>
-
-function addMedication() {
-
-    const table = document
-        .getElementById("medicationTable")
-        .getElementsByTagName("tbody")[0];
-
-    const row = table.insertRow();
-
-    for (let i = 0; i < 6; i++) {
-
-        const cell = row.insertCell();
-
-        const input = document.createElement("input");
-
-        input.type = "text";
-
-        cell.appendChild(input);
+  <script>
+    function addMedication() {
+      const tableBody = document.querySelector('#medicationTable tbody');
+      const rows = tableBody.querySelectorAll('tr');
+      const rowNumber = rows.length + 1;
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><input type="text" name="medicationName_${rowNumber}"></td>
+        <td><input type="text" name="medicationDose_${rowNumber}"></td>
+        <td><input type="text" name="medicationRoute_${rowNumber}"></td>
+        <td><input type="text" name="medicationFrequency_${rowNumber}"></td>
+        <td><input type="text" name="medicationPurpose_${rowNumber}"></td>
+        <td><input type="text" name="medicationInstructions_${rowNumber}"></td>
+      `;
+      tableBody.appendChild(row);
     }
-}
 
+    function addGoal() {
+      const tableBody = document.querySelector('#goalTable tbody');
+      const rows = tableBody.querySelectorAll('tr');
+      const rowNumber = rows.length + 1;
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><textarea name="goalNeed_${rowNumber}"></textarea></td>
+        <td><textarea name="goalOutcome_${rowNumber}"></textarea></td>
+        <td><textarea name="goalIntervention_${rowNumber}"></textarea></td>
+        <td><input type="text" name="goalFrequency_${rowNumber}"></td>
+        <td><input type="text" name="goalPerson_${rowNumber}"></td>
+        <td><textarea name="goalMeasure_${rowNumber}"></textarea></td>
+      `;
+      tableBody.appendChild(row);
+    }
 
-function addGoal() {
+    function saveForm() {
+      const formData = {};
+      const inputs = document.querySelectorAll('#adlForm input, #adlForm textarea, #adlForm select');
 
-    const table = document
-        .getElementById("goalTable")
-        .getElementsByTagName("tbody")[0];
+      inputs.forEach((element) => {
+        const key = element.name || element.id;
+        if (!key) return;
 
-    const row = table.insertRow();
-
-    for (let i = 0; i < 6; i++) {
-
-        const cell = row.insertCell();
-
-        if (i === 3 || i === 4) {
-
-            const input = document.createElement("input");
-
-            input.type = "text";
-
-            cell.appendChild(input);
-
+        if (element.type === 'checkbox') {
+          formData[key] = element.checked;
+        } else if (element.type === 'radio') {
+          if (element.checked) formData[element.name] = element.value;
         } else {
-
-            const textarea = document.createElement("textarea");
-
-            cell.appendChild(textarea);
+          formData[key] = element.value;
         }
-    }
-}
+      });
 
+      const residentName = formData.residentName || formData.name || 'Resident';
+      const carePlanSummary = formData.goalsOutcomes || formData.importantToResident || 'No care plan summary yet.';
+      const savedAdlRecords = JSON.parse(localStorage.getItem('adlRecords') || '[]');
+      const nextId = Number((savedAdlRecords[savedAdlRecords.length - 1]?.id || 0)) + 1;
+      const existingIndex = savedAdlRecords.findIndex(entry => String(entry.residentName || entry.name).toLowerCase() === String(residentName).toLowerCase());
+      const adlRecord = {
+        id: existingIndex >= 0 ? savedAdlRecords[existingIndex].id : nextId,
+        residentName,
+        name: residentName,
+        carePlanSummary: String(carePlanSummary).slice(0, 250),
+        care_plan: String(carePlanSummary).slice(0, 250),
+        status: formData.status || 'Stable',
+        admission_date: formData.admissionDate || null,
+        created_at: new Date().toISOString(),
+        data: formData
+      };
 
-function saveForm() {
+      if (existingIndex >= 0) {
+        savedAdlRecords[existingIndex] = adlRecord;
+      } else {
+        savedAdlRecords.push(adlRecord);
+      }
 
-    const formData = {};
-
-    document
-        .querySelectorAll("input, textarea, select")
-        .forEach((element, index) => {
-
-            if (element.type === "checkbox" ||
-                element.type === "radio") {
-
-                formData["field_" + index] = element.checked;
-
-            } else {
-
-                formData["field_" + index] = element.value;
-            }
-
-        });
-
-    localStorage.setItem(
-        "residentCarePlan",
-        JSON.stringify(formData)
-    );
-
-    alert("Care plan draft saved on this device.");
-}
-
-
-function clearForm() {
-
-    if (!confirm("Clear all care-plan information?")) {
-        return;
+      localStorage.setItem('residentCarePlan', JSON.stringify(formData));
+      localStorage.setItem('adlRecords', JSON.stringify(savedAdlRecords));
+      alert('Care plan draft saved on this device.');
     }
 
-    document
-        .querySelectorAll("input, textarea, select")
-        .forEach(element => {
+    function clearForm() {
+      if (!confirm('Clear all care-plan information?')) return;
 
-            if (element.type === "checkbox" ||
-                element.type === "radio") {
+      const fields = document.querySelectorAll('#adlForm input, #adlForm textarea, #adlForm select');
+      fields.forEach((element) => {
+        if (element.type === 'checkbox' || element.type === 'radio') {
+          element.checked = false;
+        } else {
+          element.value = '';
+        }
+      });
 
-                element.checked = false;
-
-            } else {
-
-                element.value = "";
-            }
-
-        });
-}
-
-
-window.onload = function() {
-
-    const today = new Date()
-        .toISOString()
-        .split("T")[0];
-
-    const carePlanDate =
-        document.getElementById("carePlanDate");
-
-    if (carePlanDate) {
-        carePlanDate.value = today;
+      localStorage.removeItem('residentCarePlan');
     }
 
-};
+    function restoreForm() {
+      const saved = JSON.parse(localStorage.getItem('residentCarePlan') || '{}');
+      const inputs = document.querySelectorAll('#adlForm input, #adlForm textarea, #adlForm select');
 
-</script>
+      inputs.forEach((element) => {
+        const key = element.name || element.id;
+        if (!key || !(key in saved)) return;
 
+        if (element.type === 'checkbox') {
+          element.checked = !!saved[key];
+        } else if (element.type === 'radio') {
+          element.checked = (String(saved[element.name]) === element.value);
+        } else {
+          element.value = saved[key];
+        }
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const residentName = params.get('clientName');
+      const residentField = document.getElementById('residentName');
+      if (residentField && residentName) residentField.value = residentName;
+    }
+
+    window.addEventListener('load', () => {
+      const params = new URLSearchParams(window.location.search);
+      const residentName = params.get('clientName');
+      const clientId = params.get('clientId');
+      if (residentName) {
+        const residentField = document.getElementById('residentName');
+        if (residentField) residentField.value = residentName;
+      }
+      if (clientId) {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'clientId';
+        hidden.value = clientId;
+        document.getElementById('adlForm').appendChild(hidden);
+      }
+      const dateField = document.getElementById('carePlanDate');
+      if (dateField && !dateField.value) {
+        dateField.value = new Date().toISOString().split('T')[0];
+      }
+      restoreForm();
+    });
+  </script>
 </body>
 </html>

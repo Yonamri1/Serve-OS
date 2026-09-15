@@ -55,6 +55,29 @@
   <script src="app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const clientId = params.get('clientId');
+      const clientName = params.get('clientName');
+      const clientIdField = document.getElementById('client_id');
+
+      if (clientId && clientIdField) clientIdField.value = clientId;
+
+      if (clientName) {
+        const clientNameField = document.querySelector('input[name="client_name"]');
+        if (clientNameField) clientNameField.value = clientName;
+      }
+
+      if ((clientId || clientName) && typeof openForm === 'function') {
+        setTimeout(() => {
+          openForm('medications');
+          if (clientIdField && clientId) clientIdField.value = clientId;
+          if (clientName) {
+            const nameField = document.querySelector('input[name="client_name"]');
+            if (nameField) nameField.value = clientName;
+          }
+        }, 80);
+      }
+
       document.querySelectorAll('[data-mar-filter]').forEach(function (button) { button.addEventListener('click', function () { document.querySelectorAll('[data-mar-filter]').forEach(function (item) { item.classList.remove('active'); }); button.classList.add('active'); window.marFilter = button.dataset.marFilter; renderTodaysMAR(window.marMedications || []); }); });
       document.getElementById('marSearch').addEventListener('input', function () { window.marQuery = this.value; renderTodaysMAR(window.marMedications || []); });
     });

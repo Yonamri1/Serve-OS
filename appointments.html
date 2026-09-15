@@ -60,5 +60,25 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const clientId = params.get('clientId');
+      const clientName = params.get('clientName');
+      const clientNameField = document.getElementById('client_name');
+      const clientIdField = document.getElementById('client_id');
+
+      if (clientName && clientNameField) clientNameField.value = clientName;
+      if (clientId && clientIdField) clientIdField.value = clientId;
+
+      if ((clientId || clientName) && typeof openForm === 'function') {
+        setTimeout(() => {
+          openForm('appointments');
+          if (clientNameField && clientName) clientNameField.value = clientName;
+          if (clientIdField && clientId) clientIdField.value = clientId;
+        }, 80);
+      }
+    });
+  </script>
 </body>
 </html>

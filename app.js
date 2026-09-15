@@ -14,13 +14,13 @@ const supabaseClient = window.supabase?.createClient
   : null;
 
 const FORM_CONFIG = {
-  clients: { title: 'Add Client', fields: [['first_name','First Name','text'],['last_name','Last Name','text'],['room','Room','text'],['admission_date','Admission Date','date'],['status','Status','text'],['medical_history','Medical History','textarea'],['care_plan','Care Plan','textarea']] },
+  clients: { title: 'Add Client', fields: [['room','Room','text'],['status','Status','text'],['medical_history','Medical History','textarea']] },
   caregivers: { title: 'Add Staff Member', fields: [['first_name','First Name','text'],['last_name','Last Name','text'],['role','Role','text'],['phone','Phone','text'],['status','Status','text']] },
   meal_plans: { title: 'Add Meal', fields: [['meal_type','Meal Type','select',['Breakfast','Lunch','Dinner','Snack']],['menu','Menu','textarea'],['updated_date','Updated Date','date']] },
   medications: { title: 'Add Medication', fields: [['client_id','Client ID','number'],['medication_name','Medication Name','text'],['dosage','Dosage','text'],['schedule','Schedule','text'],['status','Status','text']] },
   appointments: { title: 'Add Appointment', fields: [['client_name','Client Name','text'],['reason_for_visit','Reason for Visit','textarea'],['location','Location','text'],['contact_information','Contact Information','text'],['appointment_datetime','Appointment Date/Time','datetime-local'],['notes','Notes','textarea']] },
   progress_notes: { title: 'Add Progress Note', fields: [['client_id','Client ID','number'],['staff_name','Staff Name','text'],['note','Progress Note','textarea'],['recorded_at','Date and Time','datetime-local']] },
-  finance: { title: 'Add Finance Record', fields: [['entry_type','Entry Type','select',['revenue','expense']],['category','Category','text'],['client_name','Client Name','text'],['caregiver_name','Caregiver Name','text'],['amount','Amount','number'],['month','Month','text'],['notes','Notes','textarea']] },
+  finance: { title: 'Add Finance Record', fields: [['entry_type','Entry Type','select',['revenue','expense']],['category','Category','text'],['client_id','Resident ID','number'],['client_name','Resident Name','text'],['caregiver_name','Caregiver Name','text'],['amount','Amount','number'],['month','Month','text'],['notes','Notes','textarea']] },
   staff_schedules: { title: 'Add Staff Schedule', fields: [['caregiver_name','Caregiver Name','text'],['shift','Shift','select',['Day','Night']],['status','Status','select',['Regular','On Call']],['days','Days','text'],['notes','Notes','textarea']] }
 };
 
@@ -88,26 +88,94 @@ function openForm(table) {
 }
 function closeModal() { document.getElementById('recordModal').classList.remove('show'); document.getElementById('recordForm').reset(); }
 function normalize(key, value) { const text = String(value).trim(); if (!text) return undefined; if (key === 'amount' || key === 'client_id') return Number(text); if (key.endsWith('_date') || key === 'appointment_datetime') return new Date(text).toISOString(); return text; }
+function openClientAction(page, clientId, clientName) {
+  const search = new URLSearchParams({
+    clientId: String(clientId),
+    clientName: String(clientName || ''),
+    open: 'true'
+  });
+  window.location.href = `${page}.html?${search.toString()}`;
+}
+
+function getAdlRecords() {
+  try {
+    const raw = localStorage.getItem('adlRecords');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function getAdlRecordForClient(clientId, clientName = '') {
+  const records = getAdlRecords();
+  return records.find(item => String(item.clientId || item.id || '') === String(clientId || ''))
+    || records.find(item => String(item.residentName || item.name || '').toLowerCase() === String(clientName || '').toLowerCase())
+    || null;
+}
+
+function getResidentNameFromAdl(clientId, fallback = '') {
+  const record = getAdlRecordForClient(clientId, fallback);
+  return record?.residentName || record?.name || fallback;
+}
+
+function getClientDisplayName(client, index = 0) {
+  if (client?.name) return client.name;
+  if (client?.residentName) return client.residentName;
+  if (client?.first_name || client?.last_name) {
+    return [client.first_name, client.last_name].filter(Boolean).join(' ') || `Client ${index + 1}`;
+  }
+  const adl = getAdlRecords().find(item => String(item.clientId || item.id) === String(client?.id || ''));
+  return adl?.residentName || adl?.name || `Client ${index + 1}`;
+}
+
+function getClientCarePlanSummary(client) {
+  if (client?.care_plan) return client.care_plan;
+  if (client?.carePlan) return client.carePlan;
+  const adl = getAdlRecords().find(item => String(item.clientId || item.id) === String(client?.id || ''));
+  if (adl?.carePlanSummary) return adl.carePlanSummary;
+  if (adl?.carePlan) return adl.carePlan;
+  if (adl?.goalsOutcomes) return adl.goalsOutcomes;
+  return 'No care plan summary yet.';
+}
 
 function renderClients(rows, appointments = [], medications = [], progressNotes = []) {
   const root = document.getElementById('clientRows');
   if (!root) return;
   const upcoming = appointments.filter(item => item.appointment_datetime && new Date(item.appointment_datetime) >= new Date()).sort((a, b) => new Date(a.appointment_datetime) - new Date(b.appointment_datetime));
   root.innerHTML = rows.length ? rows.map((item, index) => {
-    const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Client ${index + 1}`;
+    const name = getClientDisplayName(item, index);
     const id = item.id || index + 1;
+    const safeName = name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const clientAppointments = upcoming.filter(appointment => String(appointment.client_id || '').toLowerCase() === String(id).toLowerCase() || String(appointment.client_name || '').toLowerCase() === name.toLowerCase());
     const clientMedications = medications.filter(medication => String(medication.client_id || '') === String(id));
+    const carePlanSummary = getClientCarePlanSummary(item);
     const clientNotes = progressNotes.filter(note => String(note.client_id || '') === String(id)).sort((a, b) => new Date(b.recorded_at || b.created_at || 0) - new Date(a.recorded_at || a.created_at || 0));
     const latestNote = clientNotes[0];
     const appointmentMarkup = clientAppointments.length ? clientAppointments.slice(0, 2).map(appointment => `<div class="client-detail-row"><span>${escapeHtml(new Date(appointment.appointment_datetime).toLocaleDateString([], {month: 'short', day: 'numeric'}))} · ${escapeHtml(appointment.reason_for_visit || 'Appointment')}</span><b>${escapeHtml(new Date(appointment.appointment_datetime).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}))}</b></div>`).join('') : '<div class="client-empty">No upcoming appointments</div>';
     const medicationMarkup = clientMedications.length ? clientMedications.slice(0, 3).map(medication => `<div class="client-detail-row"><span>${escapeHtml(medication.medication_name || 'Medication')}</span><b>${escapeHtml(medication.schedule || medication.dosage || 'Scheduled')}</b></div>`).join('') : '<div class="client-empty">No medications on record</div>';
     const noteMarkup = latestNote ? `<p>${escapeHtml(latestNote.note)}</p><small>By ${escapeHtml(latestNote.staff_name || 'Staff member')} · ${escapeHtml(new Date(latestNote.recorded_at || latestNote.created_at).toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}))}</small>` : '<div class="client-empty">No progress notes yet</div>';
-    return `<div class="card client-card"><div class="person"><div class="mini">${escapeHtml(name.split(' ').map(part => part[0]).join('').slice(0,2))}</div><div><b>${escapeHtml(name)}</b><br><small class="label">ID: ${id}</small></div>${badge(item.status || 'Stable')}</div><div class="client-section"><div class="client-section-title"><b>Upcoming appointments</b><span>${clientAppointments.length}</span></div>${appointmentMarkup}</div><div class="client-section"><div class="client-section-title"><b>Medications</b><span>${clientMedications.length}</span></div>${medicationMarkup}</div><div class="client-section progress-note"><div class="client-section-title"><b>Latest progress note</b><button class="action-link" type="button" onclick="openProgressNoteForm('${id}')">+ Add note</button></div>${noteMarkup}</div><div class="client-card-footer"><button class="row-delete-btn" type="button" onclick="deleteRecord('clients','${id}')">Delete client</button></div></div>`;
+    const carePlanPreview = String(carePlanSummary).length > 120 ? `${String(carePlanSummary).slice(0, 120)}…` : String(carePlanSummary);
+    return `<div class="card client-card"><div class="person"><div class="mini">${escapeHtml(name.split(' ').map(part => part[0]).join('').slice(0,2))}</div><div><b>${escapeHtml(name)}</b><br><small class="label">ID: ${id}</small></div>${badge(item.status || getAdlRecordForClient(id, name)?.status || 'Stable')}</div><div class="client-section"><div class="client-section-title"><b>Care plan</b></div><div class="client-empty" style="white-space:normal; line-height:1.5;">${escapeHtml(carePlanPreview)}</div></div><div class="client-section"><div class="client-section-title"><b>Upcoming appointments</b><span>${clientAppointments.length}</span></div>${appointmentMarkup}</div><div class="client-section"><div class="client-section-title"><b>Medications</b><span>${clientMedications.length}</span></div>${medicationMarkup}</div><div class="client-section progress-note"><div class="client-section-title"><b>Latest progress note</b><button class="action-link" type="button" onclick="openProgressNoteForm('${id}')">+ Add note</button></div>${noteMarkup}</div><div class="client-card-footer"><button class="btn secondary" type="button" onclick="openClientAction('adl', '${id}', '${safeName}')">Show full ADL</button><button class="btn secondary" type="button" onclick="openClientAction('appointments', '${id}', '${safeName}')">Set appointment</button><button class="btn secondary" type="button" onclick="openClientAction('medication', '${id}', '${safeName}')">Add medication</button><button class="btn secondary" type="button" onclick="openClientAction('documents', '${id}', '${safeName}')">Resident agreement</button><button class="btn secondary" type="button" onclick="openClientAction('finances', '${id}', '${safeName}')">Add finance entry</button><button class="row-delete-btn" type="button" onclick="deleteRecord('clients','${id}')">Delete client</button></div></div>`;
   }).join('') : '<div class="card"><p class="label">No matching client records found.</p></div>';
 }
 function openProgressNoteForm(clientId) { openForm('progress_notes'); const field = document.getElementById('client_id'); if (field) field.value = clientId; }
-function renderCaregivers(rows) { const root = document.getElementById('caregiverRows'); if (!root) return; root.innerHTML = rows.length ? rows.map((item, index) => { const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Staff ${index + 1}`; const id = item.id || index + 1; return `<div class="card"><div class="person"><div class="mini">${escapeHtml(name.slice(0,2).toUpperCase())}</div><div><b>${escapeHtml(name)}</b><br><small class="label">${escapeHtml(item.role || 'Caregiver')} · ${escapeHtml(item.phone || 'No phone')}</small></div></div><div class="row"><span>Status</span>${badge(item.status || 'Certified')}</div><div class="row"><span></span><button class="row-delete-btn" type="button" onclick="deleteRecord('caregivers','${id}')">Delete</button></div></div>`; }).join('') : '<div class="card"><p class="label">No matching staff members found.</p></div>'; }
+function getEmployeeAgreements() {
+  try {
+    const rows = JSON.parse(localStorage.getItem('employeeAgreements') || '[]');
+    return Array.isArray(rows) ? rows : rows && typeof rows === 'object' ? [rows] : [];
+  } catch (_) {
+    return [];
+  }
+}
+function renderEmployeeAgreements() {
+  const root = document.getElementById('employeeAgreementRows');
+  if (!root) return;
+  const rows = getEmployeeAgreements();
+  root.innerHTML = rows.length ? rows.map(item => `<div class="row"><span><b>${escapeHtml(item.employee_name || 'Employee')}</b><br><small class="label">${escapeHtml(item.employee_role || 'Caregiver')} · ${escapeHtml(item.employee_status || 'Agreement saved')}</small></span><a class="action-link" href="documents.html?type=employee&employeeName=${encodeURIComponent(item.employee_name || '')}">Open</a></div>`).join('') : '<div class="list-empty">No employee agreements saved yet.</div>';
+}
+function renderCaregivers(rows) { const root = document.getElementById('caregiverRows'); if (!root) return; root.innerHTML = rows.length ? rows.map((item, index) => { const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Staff ${index + 1}`; const id = item.id || index + 1; return `<div class="card"><div class="person"><div class="mini">${escapeHtml(name.slice(0,2).toUpperCase())}</div><div><b>${escapeHtml(name)}</b><br><small class="label">${escapeHtml(item.role || 'Caregiver')} · ${escapeHtml(item.phone || 'No phone')}</small></div></div><div class="row"><span>Status</span>${badge(item.status || 'Certified')}</div><div class="row"><span></span><a class="action-link" href="documents.html?type=employee&employeeName=${encodeURIComponent(name)}">Employee agreement</a><button class="row-delete-btn" type="button" onclick="deleteRecord('caregivers','${id}')">Delete</button></div></div>`; }).join('') : '<div class="card"><p class="label">No matching staff members found.</p></div>'; }
 function renderTable(id, rows, columns, key) { const root = document.getElementById(id); if (!root) return; root.innerHTML = rows.length ? rows.map(item => { const recordId = item.id || Date.now(); return `<tr>${columns.map(column => `<td>${column.render ? column.render(item) : escapeHtml(item[column.key] || '—')}</td>`).join('')}<td><button class="row-delete-btn" type="button" onclick="deleteRecord('${key}','${recordId}')">Delete</button></td></tr>`; }).join('') : `<tr><td colspan="${columns.length + 1}">No records found.</td></tr>`; }
 
 function renderDashboard() {
@@ -152,7 +220,7 @@ async function loadAll() {
   const keys = ['clients','caregivers','appointments','meal_plans','staff_schedules','medications','progress_notes','finance','policy_updates','credential_trainings'];
   const values = await Promise.all(keys.map(readRecords));
   [dashboardData.clients, dashboardData.caregivers, dashboardData.appointments, dashboardData.mealPlans, dashboardData.schedules, dashboardData.medications, dashboardData.progressNotes, dashboardData.finance, dashboardData.policies, dashboardData.trainings] = values;
-  renderClients(dashboardData.clients, dashboardData.appointments, dashboardData.medications, dashboardData.progressNotes); renderCaregivers(dashboardData.caregivers);
+  renderClients(dashboardData.clients, dashboardData.appointments, dashboardData.medications, dashboardData.progressNotes); renderCaregivers(dashboardData.caregivers); renderEmployeeAgreements();
   renderTable('appointmentRows', dashboardData.appointments, [{key:'client_name'},{key:'reason_for_visit'},{key:'location'},{key:'contact_information'},{key:'appointment_datetime'},{key:'notes'}], 'appointments');
   renderTable('mealPlanRows', dashboardData.mealPlans, [{key:'meal_type'},{key:'updated_date'},{key:'meal_type'},{key:'menu'}], 'meal_plans');
   renderTable('shiftScheduleRows', dashboardData.schedules, [{key:'caregiver_name'},{key:'shift'},{key:'status',render: item => badge(item.status)},{key:'days'},{key:'notes'}], 'staff_schedules');

@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adult Foster Home Residency / Client Agreement</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        background: #f4f6f8;
+        color: #222;
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    header {
+        background: #1f3a5f;
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    header h1 {
+        margin: 0 0 5px;
+        font-size: 25px;
+    }
+
+    header p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .notice {
+        background: #fff8e1;
+        border-left: 5px solid #d99a00;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.12);
+        margin-bottom: 20px;
+    }
+
+    nav select {
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    section {
+        background: white;
+        padding: 25px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        scroll-margin-top: 75px;
+    }
+
+    h2 {
+        color: #1f3a5f;
+        border-bottom: 2px solid #dfe5eb;
+        padding-bottom: 8px;
+        margin-top: 0;
+    }
+
+    h3 {
+        color: #34495e;
+        margin-top: 25px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .field {
+        margin-bottom: 12px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 9px;
+        border: 1px solid #b9c2cc;
+        border-radius: 5px;
+        font-size: 15px;
+        background: white;
+    }
+
+    textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        width: auto;
+        margin-right: 7px;
+    }
+
+    .checklist label,
+    .radio-group label {
+        font-weight: normal;
+        margin: 7px 0;
+    }
+
+    .money {
+        position: relative;
+    }
+
+    .money input {
+        padding-left: 25px;
+    }
+
+    .money::before {
+        content: "$";
+        position: absolute;
+        left: 10px;
+        top: 34px;
+        color: #555;
+    }
+
+    .statement {
+        background: #f7f9fb;
+        border: 1px solid #d8dee5;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 12px 0;
+    }
+
+    .initial-box {
+        display: inline-block;
+        width: 100px;
+        margin-left: 10px;
+    }
+
+    .signature-area {
+        margin-top: 20px;
+    }
+
+    .signature-line {
+        border-bottom: 1px solid #333;
+        height: 35px;
+        margin-bottom: 5px;
+    }
+
+    .buttons {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 12px;
+        border-top: 1px solid #ddd;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        z-index: 100;
+    }
+
+    button {
+        padding: 11px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .primary {
+        background: #1f3a5f;
+        color: white;
+    }
+
+    .secondary {
+        background: #e5e9ed;
+        color: #222;
+    }
+
+    .danger {
+        background: #a83232;
+        color: white;
+    }
+
+    .required {
+        color: #b00020;
+    }
+
+    .small {
+        font-size: 13px;
+        color: #555;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    @media (max-width: 700px) {
+        .grid,
+        .grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        section {
+            padding: 18px;
+        }
+
+        header h1 {
+            font-size: 21px;
+        }
+    }
+
+    @media print {
+        body {
+            background: white;
+        }
+
+        .container {
+            max-width: none;
+            padding: 0;
+        }
+
+        nav,
+        .buttons,
+        .notice {
+            display: none;
+        }
+
+        section {
+            box-shadow: none;
+            border: 1px solid #ddd;
+            page-break-inside: avoid;
+        }
+
+        input,
+        textarea,
+        select {
+            border: none;
+            border-bottom: 1px solid #777;
+            border-radius: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>Adult Foster Home Residency / Client Agreement</h1>
+    <p>Oregon Adult Foster Home — Resident and Provider Agreement</p>
+</header>
+
+<div class="notice">
+    <strong>Important:</strong>
+    This is a customizable draft. The provider must ensure that the final agreement
+    complies with the applicable Oregon Administrative Rules, the resident's
+    person-centered service plan, Medicaid requirements when applicable, and
+    current Oregon Department of Human Services requirements.
+</div>
+
+<nav>
+    <select onchange="goToSection(this.value)">
+        <option value="">Go to section...</option>
+        <option value="identification">1. Resident & Provider</option>
+        <option value="admission">2. Admission</option>
+        <option value="services">3. Services & Supports</option>
+        <option value="rates">4. Rates & Payment</option>
+        <option value="refunds">5. Refund Policy</option>
+        <option value="room">6. Bedroom & Shared Room</option>
+        <option value="rights">7. Resident Rights</option>
+        <option value="house">8. House Policies</option>
+        <option value="meals">9. Meals & Food Access</option>
+        <option value="medication">10. Medication & Health</option>
+        <option value="belongings">11. Personal Belongings</option>
+        <option value="visitors">12. Visitors & Privacy</option>
+        <option value="technology">13. Monitoring & Technology</option>
+        <option value="moves">14. Moves & Discharge</option>
+        <option value="complaints">15. Complaints & Grievances</option>
+        <option value="emergency">16. Emergency Procedures</option>
+        <option value="acknowledgment">17. Acknowledgment</option>
+        <option value="signatures">18. Signatures</option>
+        <option value="employeeAgreement">Employee Agreement</option>
+    </select>
+</nav>
+
+<form id="agreementForm">
+
+<section id="identification">
+<h2>1. Resident and Adult Foster Home Information</h2>
+
+<div class="grid">
+    <div class="field">
+        <label>Resident Full Name <span class="required">*</span></label>
+        <input type="text" name="resident_name">
+    </div>
+
+    <div class="field">
+        <label>Date of Birth</label>
+        <input type="date" name="dob">
+    </div>
+
+    <div class="field">
+        <label>AFH / Home Name</label>
+        <input type="text" name="home_name">
+    </div>
+
+    <div class="field">
+        <label>AFH License Number</label>
+        <input type="text" name="license_number">
+    </div>
+
+    <div class="field">
+        <label>Provider / Licensee Name</label>
+        <input type="text" name="provider">
+    </div>
+
+    <div class="field">
+        <label>Resident Manager, if applicable</label>
+        <input type="text" name="manager">
+    </div>
+</div>
+
+<div class="field">
+    <label>AFH Address</label>
+    <input type="text" name="address">
+</div>
+
+<div class="grid">
+    <div class="field">
+        <label>Phone</label>
+        <input type="tel" name="phone">
+    </div>
+
+    <div class="field">
+        <label>Email</label>
+        <input type="email" name="email">
+    </div>
+</div>
+
+<h3>Resident Representative</h3>
+
+<div class="grid">
+    <div class="field">
+        <label>Name</label>
+        <input type="text" name="representative">
+    </div>
+
+    <div class="field">
+        <label>Relationship / Authority</label>
+        <input type="text" name="representative_relationship">
+    </div>
+
+    <div class="field">
+        <label>Phone</label>
+        <input type="tel" name="representative_phone">
+    </div>
+
+    <div class="field">
+        <label>Email</label>
+        <input type="email" name="representative_email">
+    </div>
+</div>
+
+</section>
+
+
+<section id="admission">
+<h2>2. Admission and Agreement Term</h2>
+
+<div class="grid">
+    <div class="field">
+        <label>Admission Date</label>
+        <input type="date" name="admission_date">
+    </div>
+
+    <div class="field">
+        <label>Agreement Effective Date</label>
+        <input type="date" name="effective_date">
+    </div>
+</div>
+
+<div class="statement">
+    This Agreement describes the residential services, care, supports, rates,
+    policies, responsibilities, and rights applicable to the resident's stay
+    at the Adult Foster Home.
+</div>
+
+<div class="field">
+    <label>Special admission conditions or agreements</label>
+    <textarea name="admission_conditions"></textarea>
+</div>
+
+</section>
+
+
+<section id="services">
+<h2>3. Services and Supports</h2>
+
+<p>
+The AFH will provide services and supports according to the resident's
+assessed needs, person-centered service plan, care plan, applicable orders,
+and applicable Oregon requirements.
+</p>
+
+<div class="checklist">
+
+<label><input type="checkbox"> Room and board</label>
+<label><input type="checkbox"> Meals and snacks</label>
+<label><input type="checkbox"> Laundry</label>
+<label><input type="checkbox"> Personal care assistance</label>
+<label><input type="checkbox"> Medication assistance</label>
+<label><input type="checkbox"> Mobility assistance</label>
+<label><input type="checkbox"> Transfers</label>
+<label><input type="checkbox"> Toileting / incontinence support</label>
+<label><input type="checkbox"> Bathing / grooming assistance</label>
+<label><input type="checkbox"> Transportation assistance</label>
+<label><input type="checkbox"> Housekeeping</label>
+<label><input type="checkbox"> Care coordination</label>
+<label><input type="checkbox"> Behavioral support</label>
+<label><input type="checkbox"> Nursing-related services, when authorized</label>
+<label><input type="checkbox"> Other</label>
+
+</div>
+
+<div class="field">
+    <label>Additional services and supports</label>
+    <textarea name="additional_services"></textarea>
+</div>
+
+<div class="field">
+    <label>Services not included in the basic rate</label>
+    <textarea name="excluded_services"></textarea>
+</div>
+
+</section>
+
+
+<section id="rates">
+<h2>4. Rates, Charges, and Payment</h2>
+
+<div class="grid">
+    <div class="field money">
+        <label>Basic Monthly Rate</label>
+        <input type="number" step="0.01" name="monthly_rate">
+    </div>
+
+    <div class="field">
+        <label>Payment Due Date</label>
+        <input type="text" name="payment_due">
+    </div>
+</div>
+
+<h3>Payment Source</h3>
+
+<div class="radio-group">
+    <label><input type="radio" name="payment_source" value="private"> Private Pay</label>
+    <label><input type="radio" name="payment_source" value="medicaid"> Medicaid / Department Authorized</label>
+    <label><input type="radio" name="payment_source" value="other"> Other</label>
+</div>
+
+<div class="field">
+    <label>Additional Authorized Charges</label>
+    <textarea name="additional_charges"
+        placeholder="Describe each charge, amount, and circumstance under which it applies."></textarea>
+</div>
+
+<h3>Rate Changes</h3>
+
+<div class="field">
+    <label>Conditions under which the rate may change</label>
+    <textarea name="rate_change_conditions"></textarea>
+</div>
+
+<div class="statement">
+    For non-Medicaid residents, applicable Oregon rules require written notice
+    before general rate increases or modifications. Rate changes associated
+    with increased care or service needs may be handled according to the
+    agreed rate schedule and applicable rules.
+</div>
+
+</section>
+
+
+<section id="refunds">
+<h2>5. Refund and Payment Policy</h2>
+
+<div class="field">
+    <label>Partial-month refund policy</label>
+    <textarea name="partial_refund"></textarea>
+</div>
+
+<div class="field">
+    <label>Hospitalization / temporary absence policy</label>
+    <textarea name="hospitalization_refund"></textarea>
+</div>
+
+<div class="field">
+    <label>Death of resident policy</label>
+    <textarea name="death_refund"></textarea>
+</div>
+
+<div class="field">
+    <label>Transfer to another care setting</label>
+    <textarea name="transfer_refund"></textarea>
+</div>
+
+<div class="field">
+    <label>Voluntary move policy</label>
+    <textarea name="voluntary_move_refund"></textarea>
+</div>
+
+<div class="field">
+    <label>Involuntary move / discharge policy</label>
+    <textarea name="involuntary_move_refund"></textarea>
+</div>
+
+<div class="statement">
+    Any refund and payment policy must comply with applicable Oregon rules.
+    Unused advance payments will be handled according to applicable requirements.
+</div>
+
+</section>
+
+
+<section id="room">
+<h2>6. Bedroom and Shared Bedroom Agreement</h2>
+
+<div class="grid">
+    <div class="field">
+        <label>Bedroom Number / Location</label>
+        <input type="text" name="bedroom">
+    </div>
+
+    <div class="field">
+        <label>Private or Shared</label>
+        <select name="room_type">
+            <option value="">Select</option>
+            <option>Private</option>
+            <option>Shared</option>
+        </select>
+    </div>
+</div>
+
+<h3>Shared Bedroom Consent</h3>
+
+<div class="statement">
+    The resident or resident's representative indicates whether the resident
+    agrees to a shared bedroom.
+</div>
+
+<div class="radio-group">
+    <label>
+        <input type="radio" name="shared_room" value="yes">
+        I agree to a shared bedroom.
+    </label>
+
+    <label>
+        <input type="radio" name="shared_room" value="no">
+        I do not agree to a shared bedroom.
+    </label>
+</div>
+
+<div class="grid">
+    <div class="field">
+        <label>Resident / Representative Initials</label>
+        <input type="text" name="shared_initials">
+    </div>
+
+    <div class="field">
+        <label>Date</label>
+        <input type="date" name="shared_date">
+    </div>
+</div>
+
+<h3>Bedroom Personalization</h3>
+
+<div class="field">
+    <label>Agreement regarding furnishing and decorating the resident's bedroom</label>
+    <textarea name="bedroom_decor"></textarea>
+</div>
+
+</section>
+
+
+<section id="rights">
+<h2>7. Resident Rights and Freedoms</h2>
+
+<p>
+The resident retains applicable civil, legal, and constitutional rights.
+The AFH will support dignity, privacy, independence, choice, and participation
+in decisions concerning the resident.
+</p>
+
+<div class="checklist">
+
+<label><input type="checkbox"> Privacy</label>
+<label><input type="checkbox"> Dignity and respectful treatment</label>
+<label><input type="checkbox"> Freedom from abuse and neglect</label>
+<label><input type="checkbox"> Freedom from unnecessary restraint</label>
+<label><input type="checkbox"> Access to food</label>
+<label><input type="checkbox"> Visitors of the resident's choosing</label>
+<label><input type="checkbox"> Privacy in the bedroom</label>
+<label><input type="checkbox"> Lockable bedroom door, subject to applicable requirements</label>
+<label><input type="checkbox"> Choice of roommate when applicable</label>
+<label><input type="checkbox"> Furnishing and decorating the bedroom</label>
+<label><input type="checkbox"> Control of personal schedule and activities</label>
+<label><input type="checkbox"> Participation in care planning</label>
+<label><input type="checkbox"> Access to complaint and grievance processes</label>
+
+</div>
+
+<div class="field">
+    <label>Additional resident rights information provided</label>
+    <textarea name="rights_information"></textarea>
+</div>
+
+</section>
+
+
+<section id="house">
+<h2>8. House Policies</h2>
+
+<h3>Alcohol</h3>
+<div class="field">
+    <textarea name="alcohol_policy"
+        placeholder="Describe the home's policy."></textarea>
+</div>
+
+<h3>Tobacco / Smoking</h3>
+<div class="field">
+    <textarea name="tobacco_policy"></textarea>
+</div>
+
+<h3>Medical / Recreational Marijuana</h3>
+<div class="field">
+    <textarea name="marijuana_policy"></textarea>
+</div>
+
+<h3>Animals / Pets</h3>
+<div class="field">
+    <textarea name="animal_policy"></textarea>
+</div>
+
+<h3>Intercoms / Audio Monitors</h3>
+<div class="field">
+    <textarea name="monitor_policy"></textarea>
+</div>
+
+<h3>Other House Policies</h3>
+<div class="field">
+    <textarea name="other_house_policy"></textarea>
+</div>
+
+</section>
+
+
+<section id="meals">
+<h2>9. Meals, Food Access, and Dietary Needs</h2>
+
+<div class="grid-3">
+    <div class="field">
+        <label>Breakfast</label>
+        <input type="text" name="breakfast_time">
+    </div>
+
+    <div class="field">
+        <label>Lunch</label>
+        <input type="text" name="lunch_time">
+    </div>
+
+    <div class="field">
+        <label>Dinner</label>
+        <input type="text" name="dinner_time">
+    </div>
+</div>
+
+<div class="statement">
+    Residents must have appropriate access to food consistent with applicable
+    resident rights and their individual needs.
+</div>
+
+<div class="field">
+    <label>Snacks / between-meal food access</label>
+    <textarea name="snacks"></textarea>
+</div>
+
+<div class="field">
+    <label>Special diet / allergies / cultural or religious dietary needs</label>
+    <textarea name="diet"></textarea>
+</div>
+
+</section>
+
+
+<section id="medication">
+<h2>10. Medication and Health Support</h2>
+
+<div class="field">
+    <label>Medication assistance provided by the AFH</label>
+    <textarea name="medication_support"></textarea>
+</div>
+
+<div class="field">
+    <label>Health-care coordination arrangements</label>
+    <textarea name="health_coordination"></textarea>
+</div>
+
+<div class="field">
+    <label>Emergency medical contact information</label>
+    <textarea name="emergency_medical"></textarea>
+</div>
+
+<div class="statement">
+    Medication administration and health-related services will be provided
+    only within the scope authorized by applicable law, orders, training,
+    and the resident's care plan.
+</div>
+
+</section>
+
+
+<section id="belongings">
+<h2>11. Personal Belongings and Storage</h2>
+
+<div class="field">
+    <label>Personal belongings policy</label>
+    <textarea name="belongings_policy"></textarea>
+</div>
+
+<div class="field">
+    <label>Secure storage arrangements</label>
+    <textarea name="storage"></textarea>
+</div>
+
+<div class="field">
+    <label>Storage charges after resident leaves the home</label>
+    <textarea name="storage_charges"></textarea>
+</div>
+
+<div class="statement">
+    The resident is not responsible for damage resulting from normal wear
+    and tear to the AFH or its contents.
+</div>
+
+</section>
+
+
+<section id="visitors">
+<h2>12. Visitors, Privacy, and Personal Choice</h2>
+
+<div class="field">
+    <label>Visitor policy</label>
+    <textarea name="visitor_policy"></textarea>
+</div>
+
+<div class="field">
+    <label>Privacy arrangements</label>
+    <textarea name="privacy_policy"></textarea>
+</div>
+
+<div class="field">
+    <label>Communication / telephone / internet arrangements</label>
+    <textarea name="communication_policy"></textarea>
+</div>
+
+<div class="statement">
+    The AFH will not establish visitor restrictions that conflict with
+    applicable resident rights or HCBS requirements.
+</div>
+
+</section>
+
+
+<section id="technology">
+<h2>13. Monitoring Devices and Technology</h2>
+
+<div class="statement">
+    Agreement to home monitoring devices is not a condition of admission.
+    Any monitoring arrangement must comply with applicable law, resident
+    rights, privacy requirements, and informed consent requirements.
+</div>
+
+<div class="field">
+    <label>Monitoring devices currently present in common areas</label>
+    <textarea name="monitoring_devices"></textarea>
+</div>
+
+<div class="field">
+    <label>Monitoring devices permitted in resident's bedroom, if any</label>
+    <textarea name="bedroom_monitoring"></textarea>
+</div>
+
+</section>
+
+
+<section id="moves">
+<h2>14. Voluntary Moves, Transfers, and Discharge</h2>
+
+<h3>Voluntary Move</h3>
+
+<div class="field">
+    <label>Notice required from non-Medicaid resident, if applicable</label>
+    <textarea name="voluntary_notice"></textarea>
+</div>
+
+<h3>Involuntary Move / Discharge</h3>
+
+<div class="field">
+    <label>Conditions and process</label>
+    <textarea name="discharge_policy"></textarea>
+</div>
+
+<div class="statement">
+    Any involuntary transfer or discharge must comply with applicable Oregon
+    requirements, resident rights, notice requirements, and applicable
+    administrative hearing or appeal rights.
+</div>
+
+<div class="field">
+    <label>Emergency relocation procedures</label>
+    <textarea name="relocation"></textarea>
+</div>
+
+</section>
+
+
+<section id="complaints">
+<h2>15. Complaints, Grievances, and Appeals</h2>
+
+<div class="field">
+    <label>How the resident may submit a complaint to the AFH</label>
+    <textarea name="complaint_process"></textarea>
+</div>
+
+<div class="field">
+    <label>Provider / administrator contact</label>
+    <input type="text" name="complaint_contact">
+</div>
+
+<div class="field">
+    <label>Local licensing authority / case manager contact</label>
+    <textarea name="licensing_contact"></textarea>
+</div>
+
+<div class="statement">
+    A resident may exercise applicable complaint, grievance, reporting,
+    appeal, and administrative hearing rights without unlawful retaliation.
+</div>
+
+</section>
+
+
+<section id="emergency">
+<h2>16. Emergency Procedures</h2>
+
+<div class="field">
+    <label>Emergency contact</label>
+    <input type="text" name="emergency_contact">
+</div>
+
+<div class="field">
+    <label>Emergency phone number</label>
+    <input type="tel" name="emergency_phone">
+</div>
+
+<div class="field">
+    <label>Emergency evacuation / relocation plan</label>
+    <textarea name="emergency_plan"></textarea>
+</div>
+
+<div class="field">
+    <label>Resident-specific emergency considerations</label>
+    <textarea name="resident_emergency"></textarea>
+</div>
+
+</section>
+
+
+<section id="acknowledgment">
+<h2>17. Resident and Provider Acknowledgment</h2>
+
+<div class="statement">
+
+<p>
+By signing this Agreement, the parties acknowledge that they have reviewed
+the terms of residency, including the services to be provided, applicable
+rates and charges, house policies, refund policies, resident rights, and
+move/transfer provisions.
+</p>
+
+<p>
+The resident and/or resident representative has had an opportunity to ask
+questions and request clarification regarding this Agreement.
+</p>
+
+<p>
+Nothing in this Agreement is intended to waive a resident's legal rights,
+limit a provider's liability for negligence, or create a condition that is
+prohibited by applicable Oregon law or administrative rules.
+</p>
+
+</div>
+
+<div class="field">
+    <label>Additional notes</label>
+    <textarea name="acknowledgment_notes"></textarea>
+</div>
+
+</section>
+
+
+<section id="signatures">
+<h2>18. Signatures</h2>
+
+<p>
+The Agreement must be signed by the applicable parties before admission.
+Each party should receive a copy of the signed Agreement.
+</p>
+
+<div class="signature-area">
+
+<h3>Resident</h3>
+
+<div class="grid">
+    <div>
+        <div class="signature-line"></div>
+        Signature
+    </div>
+
+    <div>
+        <div class="signature-line"></div>
+        Date
+    </div>
+</div>
+
+<br>
+
+<h3>Resident Representative, if applicable</h3>
+
+<div class="grid">
+    <div>
+        <div class="signature-line"></div>
+        Signature
+    </div>
+
+    <div>
+        <div class="signature-line"></div>
+        Date
+    </div>
+</div>
+
+<br>
+
+<h3>AFH Provider / Licensee</h3>
+
+<div class="grid">
+    <div>
+        <div class="signature-line"></div>
+        Signature
+    </div>
+
+    <div>
+        <div class="signature-line"></div>
+        Date
+    </div>
+</div>
+
+<br>
+
+<h3>Administrator / Resident Manager, if applicable</h3>
+
+<div class="grid">
+    <div>
+        <div class="signature-line"></div>
+        Signature
+    </div>
+
+    <div>
+        <div class="signature-line"></div>
+        Date
+    </div>
+</div>
+
+</div>
+
+</section>
+
+<section id="employeeAgreement">
+<h2>Employee Agreement</h2>
+<p class="small">Use this section for caregiver employment and confidentiality records. It is linked to the staff page by employee name.</p>
+<div class="grid">
+    <div class="field"><label>Employee Full Name</label><input type="text" name="employee_name"></div>
+    <div class="field"><label>Role</label><input type="text" name="employee_role"></div>
+    <div class="field"><label>Agreement Effective Date</label><input type="date" name="employee_effective_date"></div>
+    <div class="field"><label>Employment Status</label><select name="employee_status"><option value="">Select</option><option>Active</option><option>On Call</option><option>Inactive</option></select></div>
+</div>
+<div class="field"><label>Responsibilities and Duties</label><textarea name="employee_responsibilities"></textarea></div>
+<div class="field"><label>Confidentiality, Privacy, and Resident Rights Agreement</label><textarea name="employee_confidentiality"></textarea></div>
+<div class="field"><label>Training / Credential Requirements</label><textarea name="employee_training"></textarea></div>
+<div class="grid">
+    <div class="field"><label>Employee Signature</label><input type="text" name="employee_signature"></div>
+    <div class="field"><label>Provider Signature</label><input type="text" name="employee_provider_signature"></div>
+</div>
+</section>
+
+</form>
+
+<div class="buttons">
+    <button class="primary" onclick="window.print()">
+        Print / Save as PDF
+    </button>
+
+    <button class="secondary" onclick="saveForm()">
+        Save Form Data
+    </button>
+
+    <button class="danger" onclick="clearForm()">
+        Clear Form
+    </button>
+</div>
+
+</div>
+
+<script>
+
+function goToSection(id) {
+    if (!id) return;
+
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+}
+
+function saveForm() {
+    const form = document.getElementById("agreementForm");
+    const data = {};
+
+    form.querySelectorAll("input, textarea, select").forEach(field => {
+
+        if (field.type === "checkbox") {
+            if (!data[field.name]) {
+                data[field.name] = [];
+            }
+
+            if (field.checked) {
+                data[field.name].push(field.value);
+            }
+
+        } else if (field.type === "radio") {
+
+            if (field.checked) {
+                data[field.name] = field.value;
+            }
+
+        } else {
+
+            data[field.name] = field.value;
+        }
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const isEmployee = params.get("type") === "employee" || Boolean(data.employee_name);
+    if (isEmployee) {
+        const agreements = JSON.parse(localStorage.getItem("employeeAgreements") || "[]");
+        const existingIndex = agreements.findIndex(item => String(item.employee_name || "").toLowerCase() === String(data.employee_name || "").toLowerCase());
+        const record = { ...data, document_type: "employee_agreement", updated_at: new Date().toISOString() };
+        if (existingIndex >= 0) agreements[existingIndex] = record;
+        else agreements.push(record);
+        localStorage.setItem("employeeAgreements", JSON.stringify(agreements));
+    } else {
+        localStorage.setItem("adultFosterHomeAgreement", JSON.stringify(data));
+    }
+
+    const documentRows = JSON.parse(localStorage.getItem("careone_records_documents") || "[]");
+    documentRows.push({
+        id: Date.now(),
+        document_type: isEmployee ? "employee_agreement" : "resident_agreement",
+        resident_name: data.resident_name || "",
+        employee_name: data.employee_name || "",
+        client_id: params.get("clientId") || "",
+        title: isEmployee ? `Employee Agreement - ${data.employee_name || "Employee"}` : `Resident Agreement - ${data.resident_name || "Resident"}`,
+        data,
+        created_at: new Date().toISOString()
+    });
+    localStorage.setItem("careone_records_documents", JSON.stringify(documentRows));
+
+    alert("Form data saved to this browser.");
+}
+
+function loadForm() {
+
+    const params = new URLSearchParams(window.location.search);
+    const isEmployee = params.get("type") === "employee";
+    const stored = localStorage.getItem(isEmployee ? "employeeAgreements" : "adultFosterHomeAgreement");
+    const parsed = stored ? JSON.parse(stored) : null;
+    const saved = isEmployee && Array.isArray(parsed)
+        ? JSON.stringify(parsed.find(item => String(item.employee_name || "").toLowerCase() === String(params.get("employeeName") || "").toLowerCase()) || {})
+        : stored;
+
+    const data = saved ? JSON.parse(saved) : {};
+
+    const form = document.getElementById("agreementForm");
+
+    form.querySelectorAll("input, textarea, select").forEach(field => {
+
+        if (!(field.name in data)) return;
+
+        if (field.type === "checkbox") {
+
+            field.checked =
+                data[field.name].includes(field.value);
+
+        } else if (field.type === "radio") {
+
+            field.checked =
+                data[field.name] === field.value;
+
+        } else {
+
+            field.value = data[field.name];
+        }
+    });
+
+    if (params.get("clientName")) {
+        const residentField = form.querySelector('[name="resident_name"]');
+        if (residentField) residentField.value = params.get("clientName");
+    }
+    if (params.get("employeeName")) {
+        const employeeField = form.querySelector('[name="employee_name"]');
+        if (employeeField) employeeField.value = params.get("employeeName");
+    }
+}
+
+function clearForm() {
+
+    if (
+        confirm(
+            "Are you sure you want to clear this agreement?"
+        )
+    ) {
+
+        document.getElementById("agreementForm").reset();
+
+        localStorage.removeItem("adultFosterHomeAgreement");
+        localStorage.removeItem("employeeAgreements");
+    }
+}
+
+window.addEventListener("DOMContentLoaded", loadForm);
+
+</script>
+
+</body>
+</html>
