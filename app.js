@@ -242,9 +242,36 @@ function renderDashboard() {
   const { clients, caregivers, appointments, medications, schedules, finance } = dashboardData;
   const dashboardKpis = document.getElementById('dashboardKpis');
   if (!dashboardKpis) return;
-  dashboardKpis.innerHTML = [['Active clients', clients.length, '♙'],['Caregivers', caregivers.length, '♧'],['Medication alerts', medications.filter(item => /pending|due|attention|refill/i.test(`${item.status} ${item.last_mar}`)).length, '✚'],['Upcoming visits', appointments.length, '📅'],['Recorded revenue', '$' + finance.reduce((sum, item) => sum + (item.entry_type === 'expense' ? 0 : Number(item.amount || 0)), 0).toLocaleString(), '$']].map(([label, value, icon]) => `<div class="card stat"><div><div class="label">${label}</div><div class="num">${value}</div></div><div class="icon">${icon}</div></div>`).join('');
+
+  const medicationAlerts = medications.filter(item => /pending|due|attention|refill|overdue/i.test(`${item.status || ''} ${item.last_mar || ''}`)).length;
+  const totalRevenue = finance.reduce((sum, item) => sum + (String(item.entry_type || '').toLowerCase() === 'expense' ? 0 : Number(item.amount || 0)), 0);
+  const totalExpenses = finance.reduce((sum, item) => sum + (String(item.entry_type || '').toLowerCase() === 'expense' ? Number(item.amount || 0) : 0), 0);
+  const netCashFlow = totalRevenue - totalExpenses;
+  const coverageRate = caregivers.length ? Math.min(100, Math.round((schedules.length / caregivers.length) * 100)) : 0;
+  const alertCount = medicationAlerts + appointments.filter(item => new Date(item.appointment_datetime || 0) > new Date()).length;
+  const homeCount = clients.length ? Math.max(1, Math.ceil(clients.length / 4)) : 0;
+
+  const residentCountEl = document.getElementById('residentCount');
+  if (residentCountEl) residentCountEl.textContent = String(clients.length);
+
+  const caregiverCountEl = document.getElementById('caregiverCount');
+  if (caregiverCountEl) caregiverCountEl.textContent = String(caregivers.length);
+
+  const cashFlowEl = document.getElementById('cashFlowTotal');
+  if (cashFlowEl) cashFlowEl.textContent = `$${Math.abs(netCashFlow).toLocaleString()}`;
+
+  const heroHomeCount = document.getElementById('heroHomeCount');
+  if (heroHomeCount) heroHomeCount.textContent = `${homeCount} ${homeCount === 1 ? 'home' : 'homes'}`;
+
+  const heroCoverage = document.getElementById('heroCoverage');
+  if (heroCoverage) heroCoverage.textContent = `${coverageRate}% coverage`;
+
+  const heroAlerts = document.getElementById('heroAlerts');
+  if (heroAlerts) heroAlerts.textContent = `${alertCount} ${alertCount === 1 ? 'alert' : 'alerts'}`;
+
+  dashboardKpis.innerHTML = [['Active clients', clients.length, '♙'],['Caregivers', caregivers.length, '♧'],['Medication alerts', medicationAlerts, '✚'],['Upcoming visits', appointments.length, '📅'],['Recorded revenue', '$' + totalRevenue.toLocaleString(), '$']].map(([label, value, icon]) => `<div class="card stat"><div><div class="label">${label}</div><div class="num">${value}</div></div><div class="icon">${icon}</div></div>`).join('');
   document.getElementById('dashboardAgenda').innerHTML = appointments.slice(0, 4).map(item => `<div class="row"><div><b>${escapeHtml(item.client_name || 'Client visit')}</b><br><small class="label">${escapeHtml(item.reason_for_visit || 'Appointment')}</small></div>${badge('Upcoming')}</div>`).join('') || '<div class="list-empty">No upcoming appointments recorded.</div>';
-  document.getElementById('dashboardAttention').innerHTML = medications.filter(item => /pending|due|attention|refill/i.test(`${item.status} ${item.last_mar}`)).slice(0, 4).map(item => `<div class="row"><b>${escapeHtml(item.medication_name || 'Medication task')}</b>${badge('Review')}</div>`).join('') || '<div class="list-empty">Nothing needs attention right now.</div>';
+  document.getElementById('dashboardAttention').innerHTML = medications.filter(item => /pending|due|attention|refill|overdue/i.test(`${item.status || ''} ${item.last_mar || ''}`)).slice(0, 4).map(item => `<div class="row"><b>${escapeHtml(item.medication_name || 'Medication task')}</b>${badge('Review')}</div>`).join('') || '<div class="list-empty">Nothing needs attention right now.</div>';
   document.getElementById('dashboardCoverage').innerHTML = `<div class="summary-row"><span class="label">Scheduled shifts</span><b>${schedules.length}</b></div><div class="progress"><i style="width:${caregivers.length ? Math.min(100, Math.round(schedules.length / caregivers.length * 100)) : 0}%"></i></div>`;
 }
 

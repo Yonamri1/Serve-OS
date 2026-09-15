@@ -50,9 +50,9 @@
             <h1>Good afternoon, Administrator</h1>
             <div class="sub">A live view of care, coverage, compliance, and cash flow.</div>
             <div class="chip-row">
-              <span class="chip"><span class="chip-icon">🏠</span> 12 homes</span>
-              <span class="chip"><span class="chip-icon">📊</span> 94% coverage</span>
-              <span class="chip"><span class="chip-icon">🛡️</span> 6 alerts</span>
+              <span class="chip"><span class="chip-icon">🏠</span> <span id="heroHomeCount">0 homes</span></span>
+              <span class="chip"><span class="chip-icon">📊</span> <span id="heroCoverage">0% coverage</span></span>
+              <span class="chip"><span class="chip-icon">🛡️</span> <span id="heroAlerts">0 alerts</span></span>
             </div>
           </div>
           <div class="page-hero-visual">
@@ -65,15 +65,15 @@
         <div class="page-stat-strip">
           <div class="page-stat">
             <div class="page-stat-icon teal">👥</div>
-            <div><span>Residents</span><strong>48</strong></div>
+            <div><span>Residents</span><strong id="residentCount">0</strong></div>
           </div>
           <div class="page-stat">
             <div class="page-stat-icon blue">🩺</div>
-            <div><span>Caregivers</span><strong>19</strong></div>
+            <div><span>Caregivers</span><strong id="caregiverCount">0</strong></div>
           </div>
           <div class="page-stat">
             <div class="page-stat-icon amber">💰</div>
-            <div><span>Cash flow</span><strong>$8.6k</strong></div>
+            <div><span>Cash flow</span><strong id="cashFlowTotal">$0</strong></div>
           </div>
         </div>
 
