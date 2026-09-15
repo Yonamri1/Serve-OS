@@ -1,263 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CareOne — Adult Foster Home Management</title>
-<link rel="stylesheet" href="style.css">
-<style>
-:root{
-  --navy:#17324d; --blue:#2d6cdf; --teal:#19a7a0; --bg:#f4f7fb;
-  --card:#fff; --text:#233142; --muted:#718096; --line:#e4eaf1;
-  --green:#138a62; --amber:#c78100; --red:#c94b4b; --shadow:0 6px 24px rgba(30,55,90,.07);
-}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select{font:inherit}.app{display:flex;min-height:100vh}
-.sidebar{width:250px;background:var(--navy);color:#fff;padding:24px 16px;position:fixed;inset:0 auto 0 0}
-.logo{font-size:22px;font-weight:800;padding:8px 12px 26px}.logo span{color:#61d4cf}
-.home{font-size:12px;text-transform:uppercase;color:#9eb1c4;padding:0 12px 8px}
-.nav button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#dce7f1;padding:13px 12px;border-radius:9px;margin:3px 0;cursor:pointer}
-.nav button:hover,.nav button.active{background:#254766;color:#fff}.nav button span{display:inline-block;width:27px}
-.sidebar .help{position:absolute;bottom:25px;left:20px;right:20px;background:#21425f;padding:14px;border-radius:10px;font-size:12px;color:#cbd8e5}
-.main{margin-left:250px;width:calc(100% - 250px)}
-.top{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:5}
-.search{border:1px solid var(--line);border-radius:9px;padding:10px 14px;width:320px;background:#fafbfd}.profile{display:flex;align-items:center;gap:12px}.avatar{width:38px;height:38px;border-radius:50%;background:#d9eff0;display:grid;place-items:center;font-weight:700;color:#177d79}
-.content{padding:28px 30px;max-width:1500px}.page{display:none}.page.active{display:block}
-h1{margin:0 0 5px;font-size:28px}.sub{color:var(--muted);margin-bottom:25px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px;box-shadow:var(--shadow)}
-.stat{display:flex;justify-content:space-between;align-items:flex-start}.stat .num{font-size:30px;font-weight:800;margin-top:7px}.icon{width:42px;height:42px;border-radius:10px;background:#edf4ff;display:grid;place-items:center}
-.label{font-size:13px;color:var(--muted)}.delta{font-size:12px;margin-top:8px;color:var(--green)}
-.cols{display:grid;grid-template-columns:1.45fr 1fr;gap:18px;margin-top:18px}
-.card h3{margin:0 0 16px;font-size:17px}.row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-top:1px solid var(--line)}
-.row:first-of-type{border-top:0}.person{display:flex;align-items:center;gap:11px}.mini{width:34px;height:34px;border-radius:50%;background:#e9eef6;display:grid;place-items:center;font-size:12px;font-weight:700}
-.badge{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700;background:#edf7f3;color:var(--green)}.warn{background:#fff6df;color:var(--amber)}.danger{background:#fff0f0;color:var(--red)}.info{background:#edf4ff;color:var(--blue)}
-table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
-.actions{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.btn{border:0;border-radius:8px;padding:10px 15px;background:var(--blue);color:#fff;cursor:pointer;font-weight:650}.btn.secondary{background:#edf2f7;color:var(--text)}.btn.green{background:var(--teal)}.btn.danger{background:#f7e8e8;color:#8e2d2d}.row-delete-btn{border:1px solid #f0d8d8;background:#fff5f5;color:#b74f4f;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700}
-.notice{padding:14px;border-radius:10px;background:#fff8e7;border:1px solid #f2dfaa;color:#755600;margin-bottom:18px}
-.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.money{font-size:25px;font-weight:800;margin-top:5px}
-.progress{height:8px;background:#edf1f5;border-radius:20px;overflow:hidden;margin:9px 0}.progress i{display:block;height:100%;background:var(--teal)}
-.summary-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:18px 0}.summary-card{background:linear-gradient(135deg,#ffffff,#eef8ff);border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:var(--shadow)}.summary-card .summary-row{display:flex;align-items:center;justify-content:space-between}.summary-card .summary-figure{font-size:32px;font-weight:800}.summary-card .summary-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.dashboard-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}.dashboard-kpis .card{min-height:136px}.dashboard-kpis .num{font-size:26px}.dashboard-layout{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-top:18px}.dashboard-layout .card{min-width:0}.list-empty{color:var(--muted);font-size:14px;padding:8px 0}.action-link{border:0;background:transparent;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;padding:0}.metric-note{font-size:12px;color:var(--muted);margin-top:6px}.dashboard-progress{margin-top:12px}.dashboard-progress .row{padding:8px 0}.dashboard-progress .progress{margin:4px 0 12px}.attention-list .row{gap:12px}.attention-list .row>div:first-child{min-width:0}.attention-list b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.attention-list small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.policy{display:flex;gap:15px;align-items:center}.policy .doc{width:44px;height:52px;border:1px solid var(--line);border-radius:7px;display:grid;place-items:center;background:#fafbfd}
-.modal{position:fixed;inset:0;background:rgba(14,27,42,.55);display:none;justify-content:center;align-items:center;padding:20px;z-index:30}.modal.show{display:flex}.modal-card{width:min(560px,100%);background:#fff;border-radius:16px;padding:22px;box-shadow:var(--shadow)}
-.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.form-grid .full{grid-column:1 / -1}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.field input,.field select,.field textarea{padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fafbfd}.field textarea{min-height:90px;resize:vertical}.db-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.db-tag{display:inline-flex;align-items:center;background:#edf4ff;color:var(--blue);padding:5px 10px;border-radius:20px;font-size:11px;font-weight:700}
-@media(max-width:1150px){.dashboard-kpis{grid-template-columns:repeat(3,1fr)}.dashboard-layout{grid-template-columns:1fr}}
-@media(max-width:950px){.sidebar{width:70px}.logo{font-size:0}.logo span{font-size:20px}.nav button{font-size:0;text-align:center}.nav button span{font-size:18px}.home,.help{display:none}.main{margin-left:70px;width:calc(100% - 70px)}.grid{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.summary-strip{grid-template-columns:1fr}}
-@media(max-width:600px){.top{padding:0 15px}.search{width:160px}.content{padding:20px 15px}.grid,.kpi,.cols{grid-template-columns:1fr}h1{font-size:23px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app auth-loading">
-<aside class="sidebar">
-  <div class="logo">Care<span>One</span></div>
-  <div class="home">Workspace</div>
-  <nav class="nav">
-    <button class="active" onclick="showPage('dashboard',this)"><span>⌂</span> Dashboard</button>
-    <button onclick="showPage('clients',this)"><span>♙</span> Clients</button>
-    <button onclick="showPage('staff',this)"><span>♧</span> Caregivers</button>
-    <button onclick="showPage('appointments',this)"><span>📅</span> Appointments</button>
-    <button onclick="showPage('mealPlans',this)"><span>☼</span> Meal Plan</button>
-    <button onclick="showPage('shiftSchedules',this)"><span>🗓</span> Shift Schedule</button>
-    <button onclick="showPage('medications',this)"><span>✚</span> Medications</button>
-    <button onclick="showPage('policies',this)"><span>▤</span> Policies & Updates</button>
-    <button onclick="showPage('finance',this)"><span>$</span> Finance</button>
-    <button onclick="showPage('reports',this)"><span>▥</span> Reports</button>
-    <button onclick="showPage('settings',this)"><span>⚙</span> Settings</button>
-  </nav>
-  <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
-</aside>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button active" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="staff.html">Caregivers</a>
+        <a class="nav button" href="appointments.html">Appointments</a>
+        <a class="nav button" href="meal-plan.html">Meal Plans</a>
+        <a class="nav button" href="finances.html">Finance</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
 
-<main class="main">
-<header class="top">
-  <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-  <div class="top-actions">
-    <div class="auth-links"><a href="signin.html">Sign In</a><a href="register.html">Register</a></div>
-    <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
+        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+      </header>
+
+      <section class="content">
+        <h1>Good afternoon, Administrator</h1>
+        <div class="sub">A live view of care, coverage, compliance, and cash flow.</div>
+        <div id="dashboardKpis" class="grid dashboard-kpis"></div>
+
+        <div class="dashboard-layout">
+          <div class="card">
+            <div class="summary-row"><h3>Today’s care agenda</h3><a class="action-link" href="appointments.html">View appointments</a></div>
+            <div id="dashboardAgenda" class="attention-list"></div>
+          </div>
+          <div class="card">
+            <div class="summary-row"><h3>Needs attention</h3><a class="action-link" href="medication.html">Open MAR</a></div>
+            <div id="dashboardAttention" class="attention-list"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-layout">
+          <div class="card">
+            <div class="summary-row"><h3>Coverage today</h3><a class="action-link" href="staff.html">Manage shifts</a></div>
+            <div id="dashboardCoverage"></div>
+          </div>
+          <div class="card">
+            <h3>Home health</h3>
+            <div id="dashboardHealth" class="dashboard-progress"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="summary-row"><h3>Connected records</h3><a class="action-link" href="documents.html">Open reports</a></div>
+          <div id="databaseTables" class="db-tags"></div>
+        </div>
+      </section>
+    </main>
   </div>
-</header>
 
-<section class="content">
-<div id="dashboard" class="page active">
-  <h1>Good afternoon, Administrator</h1><div class="sub">A live view of care, coverage, compliance, and cash flow.</div>
-  <div id="dashboardKpis" class="grid dashboard-kpis"></div>
-  <div class="dashboard-layout">
-    <div class="card"><div class="summary-row"><h3>Today’s care agenda</h3><button class="action-link" onclick="showPage('appointments',document.querySelectorAll('.nav button')[3])">View appointments</button></div><div id="dashboardAgenda" class="attention-list"></div></div>
-    <div class="card"><div class="summary-row"><h3>Needs attention</h3><button class="action-link" onclick="showPage('medications',document.querySelectorAll('.nav button')[6])">Open MAR</button></div><div id="dashboardAttention" class="attention-list"></div></div>
-  </div>
-  <div class="dashboard-layout">
-    <div class="card"><div class="summary-row"><h3>Coverage today</h3><button class="action-link" onclick="showPage('shiftSchedules',document.querySelectorAll('.nav button')[5])">Manage shifts</button></div><div id="dashboardCoverage"></div></div>
-    <div class="card"><h3>Home health</h3><div id="dashboardHealth" class="dashboard-progress"></div></div>
-  </div>
-  <div class="card" style="margin-top:18px"><div class="summary-row"><h3>Connected records</h3><button class="action-link" onclick="showPage('reports',document.querySelectorAll('.nav button')[9])">Open reports</button></div><div id="databaseTables" class="db-tags"></div></div>
-</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
 
-<div id="clients" class="page">
-<h1>Client Management</h1><div class="sub">Profiles, care plans, notes, appointments and documents.</div>
-<div class="actions"><button class="btn" onclick="openForm('clients')">+ Add Client</button><button class="btn secondary">Export</button></div>
-<div id="clientRows" class="grid"></div>
-</div>
-
-<div id="staff" class="page">
-<h1>Caregiver Management</h1><div class="sub">Scheduling, credentials, training and shift coverage.</div>
-<div class="actions"><button class="btn" onclick="openForm('caregivers')">+ Add Caregiver</button><button class="btn secondary">View Schedule</button></div>
-<div id="caregiverRows" class="grid"></div>
-</div>
-
-<div id="appointments" class="page">
-<h1>Appointments</h1><div class="sub">Track client visits, reasons, location and contact details.</div>
-<div class="actions"><button class="btn" onclick="openForm('appointments')">+ Add Appointment</button></div>
-<div class="card"><table><thead><tr><th>Client</th><th>Visit Reason</th><th>Location</th><th>Contact</th><th>Date & Time</th><th>Notes</th><th>Action</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
-</div>
-
-<div id="mealPlans" class="page">
-<h1>Meal Plans</h1><div class="sub">Track dietary plans, meals, and preferences for each client.</div>
-<div class="actions"><button class="btn" onclick="openForm('meal_plans')">+ Add Meal Plan</button><button class="btn secondary">Export</button></div>
-<div class="card"><table><thead><tr><th>Meal Plan</th><th>Day</th><th>Type</th><th>Notes</th><th>Action</th></tr></thead><tbody id="mealPlanRows"></tbody></table></div>
-</div>
-
-<div id="shiftSchedules" class="page">
-<h1>Shift Schedule</h1><div class="sub">Daily caregiver assignments and coverage.</div>
-<div class="actions"><button class="btn" onclick="openForm('staff_schedules')">+ Add Shift</button></div>
-<div class="card"><table><thead><tr><th>Caregiver</th><th>Shift</th><th>Status</th><th>Days</th><th>Notes</th><th>Action</th></tr></thead><tbody id="shiftScheduleRows"></tbody></table></div>
-</div>
-
-<div id="medications" class="page">
-<h1>Medication Management</h1><div class="sub">MAR tracking, administration tasks, refills and medication changes.</div>
-<div class="actions"><button class="btn" onclick="openForm('medications')">+ Add Medication</button></div>
-<div class="notice"><b>3 medication tasks need attention.</b> Review the MAR before the next administration window.</div>
-<div class="card"><table><thead><tr><th>Client</th><th>Medication</th><th>Schedule</th><th>Last MAR</th><th>Status</th><th>Action</th></tr></thead><tbody id="medicationRows">
-<tr><td>Maria Thompson</td><td>Medication A</td><td>8:00 AM</td><td>Given</td><td><span class="badge">Complete</span></td><td><button class="row-delete-btn" type="button">Delete</button></td></tr>
-<tr><td>James Rivera</td><td>Medication B</td><td>12:00 PM</td><td>Pending</td><td><span class="badge warn">Due</span></td><td><button class="row-delete-btn" type="button">Delete</button></td></tr>
-<tr><td>Linda Chen</td><td>Medication C</td><td>5:00 PM</td><td>Refill low</td><td><span class="badge danger">Attention</span></td><td><button class="row-delete-btn" type="button">Delete</button></td></tr>
-<tr><td>Robert Davis</td><td>Medication D</td><td>8:00 PM</td><td>Scheduled</td><td><span class="badge info">Upcoming</span></td><td><button class="row-delete-btn" type="button">Delete</button></td></tr>
-</tbody></table></div>
-</div>
-
-<div id="policies" class="page">
-<h1>Policies & Updates</h1><div class="sub">Keep policies current and track staff acknowledgements.</div>
-<div class="actions"><button class="btn">+ Upload Policy</button><button class="btn secondary">Send Update</button></div>
-<div class="card">
-<div class="row policy"><div class="doc">PDF</div><div style="flex:1"><b>Medication Administration Policy</b><br><small class="label">Version 4.2 · Updated Aug 18, 2026</small></div><span class="badge">100% acknowledged</span></div>
-<div class="row policy"><div class="doc">PDF</div><div style="flex:1"><b>Emergency & Evacuation Plan</b><br><small class="label">Version 3.1 · Updated Jul 30, 2026</small></div><span class="badge">100% acknowledged</span></div>
-<div class="row policy"><div class="doc">PDF</div><div style="flex:1"><b>Infection Prevention Procedures</b><br><small class="label">Version 2.7 · Updated Jun 22, 2026</small></div><span class="badge warn">88% acknowledged</span></div>
-</div>
-</div>
-
-<div id="finance" class="page">
-<h1>Finance</h1><div class="sub">Track revenue, expenses, invoices and monthly cash flow.</div>
-<div class="actions"><button class="btn" onclick="openForm('finance')">+ Add Finance Record</button></div>
-<div class="kpi">
-<div class="card"><div class="label">Revenue — August</div><div class="money">$18,420</div><div class="delta">+6.8%</div></div>
-<div class="card"><div class="label">Expenses — August</div><div class="money">$9,780</div><div class="delta">+2.1%</div></div>
-<div class="card"><div class="label">Net Cash Flow</div><div class="money">$8,640</div><div class="delta">Healthy</div></div>
-</div>
-<div class="cols">
-<div class="card"><h3>Recent Transactions</h3><div id="financeRows" class="row-stack"></div></div>
-<div class="card"><h3>Invoices</h3><div class="row"><span>Outstanding</span><b>$4,800</b></div><div class="row"><span>Due this week</span><b>$2,100</b></div><div class="row"><span>Paid this month</span><b>$16,320</b></div></div>
-</div>
-</div>
-
-<div id="reports" class="page">
-<h1>Reports</h1><div class="sub">Operational, compliance and scheduling insights from your live records.</div>
-<div id="reportSummaryCards" class="summary-strip"></div>
-<div class="cols">
-  <div class="card"><h3>Client Overview</h3><div id="reportClientList" class="row-stack"></div></div>
-  <div class="card"><h3>Caregiver Coverage</h3><div id="reportScheduleList" class="row-stack"></div></div>
-</div>
-</div>
-
-<div id="settings" class="page">
-<h1>Settings</h1><div class="sub">Home profile, permissions, notifications and integrations.</div>
-<div class="card"><h3>Adult Foster Home Profile</h3><div class="row"><span>Home name</span><b>CareOne Adult Foster Home</b></div><div class="row"><span>Administrator</span><b>Administrator</b></div><div class="row"><span>Notifications</span><span class="badge">Enabled</span></div><div class="row"><span>Role-based access</span><span class="badge">Enabled</span></div></div>
-</div>
-</section>
-
-<div id="recordModal" class="modal" aria-hidden="true">
-  <div class="modal-card">
-    <h3 id="modalTitle">Add record</h3>
-    <form id="recordForm">
-      <div id="formFields" class="form-grid"></div>
-      <div class="actions" style="margin-top:20px;justify-content:flex-end;">
-        <button type="button" class="btn secondary" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="btn">Save</button>
-      </div>
-    </form>
-  </div>
-</div>
-</main>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const authClient = window.supabase.createClient(
-  "https://zsmilczlumqkdpthlpto.supabase.co",
-  "sb_publishable__Oq50W1WSRfYcae0StNicg_FrzPwRTB"
-);
-authClient.auth.getSession().then(({ data }) => {
-  if (data.session) document.querySelector('.app').classList.remove('auth-loading');
-  else window.location.replace('signin.html');
-});
-</script>
-<script src="app.js"></script>
-<!--
-const SUPABASE_URL = "https://zsmilczlumqkdpthlpto.supabase.co";
-const SUPABASE_KEY = "sb_publishable__Oq50W1WSRfYcae0StNicg_FrzPwRTB";
-
-const TABLE_ALIASES = {
-  clients: ['clients'],
-  caregivers: ['staff'],
-  meal_plans: ['meals'],
-  medications: ['medications'],
-  appointments: ['appointments'],
-  finance: ['finance_records'],
-  policy_updates: ['policy_updates'],
-  credential_trainings: ['training_records'],
-  staff_schedules: ['staff_schedules']
-};
-
-const DEFAULT_TABLES = Object.values(TABLE_ALIASES).flat();
-const STORAGE_PREFIX = 'careone_records_';
-const dashboardData = {
-  clients: [], caregivers: [], appointments: [], medications: [], schedules: [], finance: [], policies: [], trainings: []
-};
-
-const supabaseClient = window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: false }
-}) : null;
-
-function getLocalRecords(tableKey) {
-  try {
-    const raw = localStorage.getItem(`${STORAGE_PREFIX}${tableKey}`);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.warn('Could not read local records for', tableKey, error);
-    return [];
-  }
-}
-
-function saveLocalRecords(tableKey, rows) {
-  try {
-    localStorage.setItem(`${STORAGE_PREFIX}${tableKey}`, JSON.stringify(rows));
-  } catch (error) {
-    console.warn('Could not save local records for', tableKey, error);
-  }
-}
-
-function createLocalRecord(tableKey, payload) {
-  const rows = getLocalRecords(tableKey);
-  const record = {
-    id: Date.now(),
-    ...payload,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  };
-  rows.push(record);
-  saveLocalRecords(tableKey, rows);
-  return [record];
-}
-
-const FORM_CONFIG = {
   clients: {
     title: 'Add Client',
     fields: [
