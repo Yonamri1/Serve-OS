@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Resident Care Plan</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f3f4f6;
+        color: #222;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .header {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+    }
+
+    .header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+    }
+
+    .header p {
+        margin: 0;
+        color: #666;
+    }
+
+    .section {
+        background: white;
+        padding: 22px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .section h2 {
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ddd;
+        font-size: 20px;
+    }
+
+    .section h3 {
+        font-size: 16px;
+        margin-top: 22px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        font-size: 14px;
+        background: white;
+    }
+
+    textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: normal;
+    }
+
+    .checkbox-item input {
+        width: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th,
+    td {
+        border: 1px solid #bbb;
+        padding: 8px;
+        vertical-align: top;
+    }
+
+    th {
+        background: #f0f0f0;
+        text-align: left;
+        font-size: 13px;
+    }
+
+    td input,
+    td textarea,
+    td select {
+        border: none;
+        border-radius: 0;
+        padding: 5px;
+    }
+
+    td textarea {
+        min-height: 70px;
+    }
+
+    .button-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    button {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .primary {
+        background: #1f4e79;
+        color: white;
+    }
+
+    .secondary {
+        background: #e5e7eb;
+        color: #222;
+    }
+
+    .danger {
+        background: #b42318;
+        color: white;
+    }
+
+    .signature-box {
+        height: 80px;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    .notice {
+        padding: 12px;
+        background: #f5f7fa;
+        border-left: 4px solid #1f4e79;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    .review-status {
+        padding: 10px;
+        background: #f8f8f8;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+        .grid,
+        .grid-3,
+        .checkbox-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .container {
+            margin: 10px auto;
+            padding: 10px;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        .section {
+            padding: 15px;
+        }
+    }
+
+    @media print {
+        body {
+            background: white;
+        }
+
+        .container {
+            max-width: none;
+            margin: 0;
+        }
+
+        .button-row {
+            display: none;
+        }
+
+        .section {
+            border: 1px solid #999;
+            break-inside: avoid;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Resident Care Plan</h1>
+        <p>Adult Foster Home — Individualized Resident Care Plan</p>
+    </div>
+
+    <!-- RESIDENT INFORMATION -->
+
+    <div class="section">
+
+        <h2>1. Resident Information</h2>
+
+        <div class="grid">
+
+            <div class="field">
+                <label>Resident Name</label>
+                <input type="text" id="residentName">
+            </div>
+
+            <div class="field">
+                <label>Date of Birth</label>
+                <input type="date" id="dob">
+            </div>
+
+            <div class="field">
+                <label>Date of Admission</label>
+                <input type="date" id="admissionDate">
+            </div>
+
+            <div class="field">
+                <label>Care Plan Date</label>
+                <input type="date" id="carePlanDate">
+            </div>
+
+            <div class="field">
+                <label>Next Review Date</label>
+                <input type="date" id="reviewDate">
+            </div>
+
+            <div class="field">
+                <label>Room</label>
+                <input type="text">
+            </div>
+
+            <div class="field full">
+                <label>Previous Living Arrangement</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTACTS -->
+
+    <div class="section">
+
+        <h2>2. Important Contacts</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Contact / Role</th>
+                    <th>Name</th>
+                    <th>Relationship</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Emergency Contact</td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="tel"></td>
+                    <td><input type="email"></td>
+                </tr>
+
+                <tr>
+                    <td>Primary Care Provider</td>
+                    <td><input type="text"></td>
+                    <td>Medical Provider</td>
+                    <td><input type="tel"></td>
+                    <td><input type="email"></td>
+                </tr>
+
+                <tr>
+                    <td>Case Manager</td>
+                    <td><input type="text"></td>
+                    <td>Case Manager</td>
+                    <td><input type="tel"></td>
+                    <td><input type="email"></td>
+                </tr>
+
+                <tr>
+                    <td>Legal Representative / Guardian</td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="tel"></td>
+                    <td><input type="email"></td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- PERSON CENTERED INFORMATION -->
+
+    <div class="section">
+
+        <h2>3. Resident Preferences and Person-Centered Information</h2>
+
+        <div class="grid">
+
+            <div class="field full">
+                <label>What is important to the resident?</label>
+                <textarea
+                    placeholder="Describe routines, relationships, activities, cultural preferences, spiritual preferences, personal interests, etc."></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Resident's strengths and abilities</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Resident's preferences for daily routine</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Resident's goals and desired outcomes</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ASSESSMENT -->
+
+    <div class="section">
+
+        <h2>4. Assessment of Care Needs</h2>
+
+        <div class="notice">
+            Identify the resident's current abilities, limitations, risks, preferences,
+            and level of assistance required.
+        </div>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Care Area</th>
+                    <th>Independent</th>
+                    <th>Needs Assistance</th>
+                    <th>Dependent</th>
+                    <th>Description / Instructions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Bathing</td>
+                    <td><input type="radio" name="bathing"></td>
+                    <td><input type="radio" name="bathing"></td>
+                    <td><input type="radio" name="bathing"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Dressing</td>
+                    <td><input type="radio" name="dressing"></td>
+                    <td><input type="radio" name="dressing"></td>
+                    <td><input type="radio" name="dressing"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Grooming</td>
+                    <td><input type="radio" name="grooming"></td>
+                    <td><input type="radio" name="grooming"></td>
+                    <td><input type="radio" name="grooming"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Toileting</td>
+                    <td><input type="radio" name="toileting"></td>
+                    <td><input type="radio" name="toileting"></td>
+                    <td><input type="radio" name="toileting"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Eating / Feeding</td>
+                    <td><input type="radio" name="eating"></td>
+                    <td><input type="radio" name="eating"></td>
+                    <td><input type="radio" name="eating"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Mobility / Transfers</td>
+                    <td><input type="radio" name="mobility"></td>
+                    <td><input type="radio" name="mobility"></td>
+                    <td><input type="radio" name="mobility"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Medication Management</td>
+                    <td><input type="radio" name="medication"></td>
+                    <td><input type="radio" name="medication"></td>
+                    <td><input type="radio" name="medication"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Communication</td>
+                    <td><input type="radio" name="communication"></td>
+                    <td><input type="radio" name="communication"></td>
+                    <td><input type="radio" name="communication"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Behavioral / Emotional Support</td>
+                    <td><input type="radio" name="behavior"></td>
+                    <td><input type="radio" name="behavior"></td>
+                    <td><input type="radio" name="behavior"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>Community Activities</td>
+                    <td><input type="radio" name="community"></td>
+                    <td><input type="radio" name="community"></td>
+                    <td><input type="radio" name="community"></td>
+                    <td><textarea></textarea></td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- MEDICAL -->
+
+    <div class="section">
+
+        <h2>5. Medical and Health Needs</h2>
+
+        <div class="grid">
+
+            <div class="field full">
+                <label>Medical Diagnoses / Conditions</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Allergies</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Special Diet / Nutrition Requirements</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Physician / NP Orders</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Nursing Instructions / Delegations</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Other Health and Safety Considerations</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MEDICATION -->
+
+    <div class="section">
+
+        <h2>6. Medication Support</h2>
+
+        <table id="medicationTable">
+
+            <thead>
+                <tr>
+                    <th>Medication</th>
+                    <th>Dose</th>
+                    <th>Route</th>
+                    <th>Frequency</th>
+                    <th>Purpose</th>
+                    <th>Special Instructions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <div class="button-row">
+            <button class="secondary" onclick="addMedication()">
+                + Add Medication
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- CARE GOALS -->
+
+    <div class="section">
+
+        <h2>7. Individualized Care Goals and Interventions</h2>
+
+        <div class="notice">
+            Each identified need should have a corresponding goal, intervention,
+            responsible person, and method for monitoring progress.
+        </div>
+
+        <table id="goalTable">
+
+            <thead>
+
+                <tr>
+                    <th>Identified Need / Problem</th>
+                    <th>Goal / Desired Outcome</th>
+                    <th>Staff Intervention / Support</th>
+                    <th>Frequency</th>
+                    <th>Responsible Person</th>
+                    <th>How Progress Will Be Measured</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        <textarea></textarea>
+                    </td>
+
+                    <td>
+                        <textarea></textarea>
+                    </td>
+
+                    <td>
+                        <textarea></textarea>
+                    </td>
+
+                    <td>
+                        <input type="text">
+                    </td>
+
+                    <td>
+                        <input type="text">
+                    </td>
+
+                    <td>
+                        <textarea></textarea>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <div class="button-row">
+
+            <button class="secondary" onclick="addGoal()">
+                + Add Care Goal
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SAFETY -->
+
+    <div class="section">
+
+        <h2>8. Safety and Risk Management</h2>
+
+        <h3>Identified Risks</h3>
+
+        <div class="checkbox-grid">
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Fall Risk
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Elopement / Wandering
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Choking
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Medication Risk
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Behavioral Risk
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Infection Risk
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Skin Integrity Risk
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox">
+                Other
+            </label>
+
+        </div>
+
+        <div class="grid" style="margin-top:20px;">
+
+            <div class="field full">
+                <label>Risk Prevention / Safety Plan</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Emergency Procedures Specific to Resident</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVITIES -->
+
+    <div class="section">
+
+        <h2>9. Activities and Community Participation</h2>
+
+        <div class="grid">
+
+            <div class="field full">
+                <label>Preferred Activities</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Community Participation Goals</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Social / Recreational Preferences</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CARE TEAM -->
+
+    <div class="section">
+
+        <h2>10. Care Team Responsibilities</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Person / Organization</th>
+                    <th>Role</th>
+                    <th>Responsibilities</th>
+                    <th>Contact</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><textarea></textarea></td>
+                    <td><input type="text"></td>
+                </tr>
+
+                <tr>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><textarea></textarea></td>
+                    <td><input type="text"></td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- REVIEW -->
+
+    <div class="section">
+
+        <h2>11. Care Plan Review</h2>
+
+        <div class="grid">
+
+            <div class="field">
+                <label>Review Date</label>
+                <input type="date">
+            </div>
+
+            <div class="field">
+                <label>Review Type</label>
+
+                <select>
+
+                    <option>Initial Care Plan</option>
+                    <option>Six-Month Review</option>
+                    <option>Change in Condition</option>
+                    <option>Significant Change</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+            <div class="field full">
+                <label>Changes in Resident Needs</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Goals Achieved</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Goals Requiring Continued Support</label>
+                <textarea></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Changes to Care Plan</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SIGNATURES -->
+
+    <div class="section">
+
+        <h2>12. Acknowledgment and Signatures</h2>
+
+        <div class="notice">
+            The care plan should be developed with appropriate participation
+            from the resident and relevant members of the care team.
+        </div>
+
+        <div class="grid">
+
+            <div class="field">
+                <label>Resident / Representative Name</label>
+                <input type="text">
+            </div>
+
+            <div class="field">
+                <label>Date</label>
+                <input type="date">
+            </div>
+
+            <div class="field full">
+                <label>Resident / Representative Signature</label>
+                <div class="signature-box"></div>
+            </div>
+
+
+            <div class="field">
+                <label>Provider / Caregiver Name</label>
+                <input type="text">
+            </div>
+
+            <div class="field">
+                <label>Date</label>
+                <input type="date">
+            </div>
+
+            <div class="field full">
+                <label>Provider / Caregiver Signature</label>
+                <div class="signature-box"></div>
+            </div>
+
+
+            <div class="field">
+                <label>Case Manager / Other Participant</label>
+                <input type="text">
+            </div>
+
+            <div class="field">
+                <label>Date</label>
+                <input type="date">
+            </div>
+
+            <div class="field full">
+                <label>Signature</label>
+                <div class="signature-box"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="button-row">
+
+        <button class="primary" onclick="window.print()">
+            Print Care Plan
+        </button>
+
+        <button class="secondary" onclick="saveForm()">
+            Save Draft
+        </button>
+
+        <button class="secondary" onclick="clearForm()">
+            Clear Form
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function addMedication() {
+
+    const table = document
+        .getElementById("medicationTable")
+        .getElementsByTagName("tbody")[0];
+
+    const row = table.insertRow();
+
+    for (let i = 0; i < 6; i++) {
+
+        const cell = row.insertCell();
+
+        const input = document.createElement("input");
+
+        input.type = "text";
+
+        cell.appendChild(input);
+    }
+}
+
+
+function addGoal() {
+
+    const table = document
+        .getElementById("goalTable")
+        .getElementsByTagName("tbody")[0];
+
+    const row = table.insertRow();
+
+    for (let i = 0; i < 6; i++) {
+
+        const cell = row.insertCell();
+
+        if (i === 3 || i === 4) {
+
+            const input = document.createElement("input");
+
+            input.type = "text";
+
+            cell.appendChild(input);
+
+        } else {
+
+            const textarea = document.createElement("textarea");
+
+            cell.appendChild(textarea);
+        }
+    }
+}
+
+
+function saveForm() {
+
+    const formData = {};
+
+    document
+        .querySelectorAll("input, textarea, select")
+        .forEach((element, index) => {
+
+            if (element.type === "checkbox" ||
+                element.type === "radio") {
+
+                formData["field_" + index] = element.checked;
+
+            } else {
+
+                formData["field_" + index] = element.value;
+            }
+
+        });
+
+    localStorage.setItem(
+        "residentCarePlan",
+        JSON.stringify(formData)
+    );
+
+    alert("Care plan draft saved on this device.");
+}
+
+
+function clearForm() {
+
+    if (!confirm("Clear all care-plan information?")) {
+        return;
+    }
+
+    document
+        .querySelectorAll("input, textarea, select")
+        .forEach(element => {
+
+            if (element.type === "checkbox" ||
+                element.type === "radio") {
+
+                element.checked = false;
+
+            } else {
+
+                element.value = "";
+            }
+
+        });
+}
+
+
+window.onload = function() {
+
+    const today = new Date()
+        .toISOString()
+        .split("T")[0];
+
+    const carePlanDate =
+        document.getElementById("carePlanDate");
+
+    if (carePlanDate) {
+        carePlanDate.value = today;
+    }
+
+};
+
+</script>
+
+</body>
+</html>
