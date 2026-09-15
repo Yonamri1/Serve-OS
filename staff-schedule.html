@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - Staff Schedule</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="staff.html">Caregivers</a>
+        <a class="nav button active" href="staff-schedule.html">Staff Schedule</a>
+        <a class="nav button" href="appointments.html">Appointments</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search schedule…" oninput="filterSchedule(this.value)">
+        <div class="profile">
+          <div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div>
+          <div class="avatar">AM</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <h1>Staff Schedule</h1>
+        <div class="sub">Track daily caregiver coverage, shifts, and staffing status.</div>
+
+        <div class="actions">
+          <button class="btn" type="button" onclick="openForm('staff_schedules')">+ Add Shift</button>
+          <a class="btn secondary" href="staff.html">Back to Caregivers</a>
+          <a class="btn secondary" href="index.html">Back to Dashboard</a>
+        </div>
+
+        <div class="kpi">
+          <div class="card"><div class="label">Scheduled Today</div><div class="money" id="scheduleTodayCount">0</div><div class="delta">Coverage</div></div>
+          <div class="card"><div class="label">Day Shifts</div><div class="money" id="scheduleDayCount">0</div><div class="delta">Assigned</div></div>
+          <div class="card"><div class="label">Night Shifts</div><div class="money" id="scheduleNightCount">0</div><div class="delta">Assigned</div></div>
+        </div>
+
+        <div class="card table-wrap">
+          <table>
+            <thead>
+              <tr><th>Caregiver</th><th>Shift</th><th>Status</th><th>Days</th><th>Notes</th><th>Action</th></tr>
+            </thead>
+            <tbody id="shiftScheduleRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div id="recordModal" class="modal" aria-hidden="true">
+        <div class="modal-card">
+          <h3 id="modalTitle">Add record</h3>
+          <form id="recordForm">
+            <div id="formFields" class="form-grid"></div>
+            <div class="actions" style="margin-top:20px;justify-content:flex-end;">
+              <button type="button" class="btn secondary" onclick="closeModal()">Cancel</button>
+              <button type="submit" class="btn">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script>
+    function filterSchedule(query) {
+      const value = (query || '').toLowerCase().trim();
+      const rows = JSON.parse(localStorage.getItem('careone_records_staff_schedules') || '[]');
+      const filtered = !value ? rows : rows.filter(item => `${item.caregiver_name || ''} ${item.shift || ''} ${item.days || ''} ${item.status || ''}`.toLowerCase().includes(value));
+      renderScheduleRows(filtered);
+    }
+
+    function renderScheduleRows(data) {
+      const tableBody = document.getElementById('shiftScheduleRows');
+      if (!tableBody) return;
+
+      if (!data.length) {
+        tableBody.innerHTML = '<tr><td colspan="6">No staff schedules found.</td></tr>';
+        document.getElementById('scheduleTodayCount').textContent = '0';
+        document.getElementById('scheduleDayCount').textContent = '0';
+        document.getElementById('scheduleNightCount').textContent = '0';
+        return;
+      }
+
+      const dayCount = data.filter(item => String(item.shift || '').toLowerCase() === 'day').length;
+      const nightCount = data.filter(item => String(item.shift || '').toLowerCase() === 'night').length;
+      document.getElementById('scheduleTodayCount').textContent = String(data.length);
+      document.getElementById('scheduleDayCount').textContent = String(dayCount);
+      document.getElementById('scheduleNightCount').textContent = String(nightCount);
+
+      tableBody.innerHTML = data.map(item => {
+        const caregiver = item.caregiver_name || item.staff_name || 'Staff';
+        const shift = item.shift || 'Day';
+        const status = item.status || 'Regular';
+        const days = item.days || item.day || '—';
+        const notes = item.notes || '—';
+        const id = item.id || Date.now() + Math.random();
+        return `<tr><td>${caregiver}</td><td>${shift}</td><td><span class="badge">${status}</span></td><td>${days}</td><td>${notes}</td><td><button class="row-delete-btn" type="button" onclick="deleteRecord('staff_schedules', '${id}')">Delete</button></td></tr>`;
+      }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const rows = JSON.parse(localStorage.getItem('careone_records_staff_schedules') || '[]');
+      renderScheduleRows(rows);
+    });
+  </script>
+</body>
+</html>

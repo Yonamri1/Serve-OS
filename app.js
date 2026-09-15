@@ -1,5 +1,64 @@
 const SUPABASE_URL = "https://zsmilczlumqkdpthlpto.supabase.co";
 const SUPABASE_KEY = "sb_publishable__Oq50W1WSRfYcae0StNicg_FrzPwRTB";
+
+function buildTopToolbarMenu() {
+  const header = document.querySelector('.top');
+  if (!header || document.querySelector('.topbar-quick-nav')) return;
+
+  const defaultNavigation = [
+    { label: 'Dashboard', href: 'index.html' },
+    { label: 'Clients', href: 'clients.html' },
+    { label: 'ADL Care Plans', href: 'adl.html' },
+    { label: 'Resident Agreement', href: 'resident-agreement.html' },
+    { label: 'Employee Agreement', href: 'employee-agreement.html' },
+    { label: 'Caregivers', href: 'staff.html' },
+    { label: 'Appointments', href: 'appointments.html' },
+    { label: 'Meal Plans', href: 'meal-plan.html' },
+    { label: 'Medication', href: 'medication.html' },
+    { label: 'Finance', href: 'finances.html' },
+    { label: 'Documents', href: 'documents.html' }
+  ];
+
+  const currentLinks = [...document.querySelectorAll('.nav a, .nav button')].map(link => ({
+    label: link.textContent.trim(),
+    href: link.getAttribute('href') || '#'
+  })).filter(link => link.label && link.href && link.href !== '#');
+
+  const navLinks = [...currentLinks, ...defaultNavigation].filter((link, index, list) => {
+    const key = `${link.label}|${link.href}`;
+    return list.findIndex(item => `${item.label}|${item.href}` === key) === index;
+  });
+
+  if (!navLinks.length) return;
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'topbar-quick-nav';
+  wrapper.innerHTML = `
+    <label for="topQuickNav">Quick jump</label>
+    <select id="topQuickNav" aria-label="Quick jump menu">
+      <option value="">Choose a section</option>
+      ${navLinks.map(link => `<option value="${link.href}">${link.label}</option>`).join('')}
+    </select>
+  `;
+
+  header.appendChild(wrapper);
+
+  const select = wrapper.querySelector('select');
+  if (select) {
+    select.addEventListener('change', (event) => {
+      const value = event.target.value;
+      if (!value) return;
+      const target = value.startsWith('#') ? document.querySelector(value) : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (value && value !== '#') {
+        window.location.href = value;
+      }
+    });
+  }
+}
+
+window.addEventListener('DOMContentLoaded', buildTopToolbarMenu);
 const TABLE_ALIASES = {
   clients: ['clients'], caregivers: ['staff'], meal_plans: ['meals'],
   medications: ['medications'], appointments: ['appointments'],
@@ -94,7 +153,8 @@ function openClientAction(page, clientId, clientName) {
     clientName: String(clientName || ''),
     open: 'true'
   });
-  window.location.href = `${page}.html?${search.toString()}`;
+  const target = page === 'documents' ? 'resident-agreement' : page;
+  window.location.href = `${target}.html?${search.toString()}`;
 }
 
 function getAdlRecords() {
@@ -173,7 +233,7 @@ function renderEmployeeAgreements() {
   const root = document.getElementById('employeeAgreementRows');
   if (!root) return;
   const rows = getEmployeeAgreements();
-  root.innerHTML = rows.length ? rows.map(item => `<div class="row"><span><b>${escapeHtml(item.employee_name || 'Employee')}</b><br><small class="label">${escapeHtml(item.employee_role || 'Caregiver')} · ${escapeHtml(item.employee_status || 'Agreement saved')}</small></span><a class="action-link" href="documents.html?type=employee&employeeName=${encodeURIComponent(item.employee_name || '')}">Open</a></div>`).join('') : '<div class="list-empty">No employee agreements saved yet.</div>';
+  root.innerHTML = rows.length ? rows.map(item => `<div class="row"><span><b>${escapeHtml(item.employee_name || 'Employee')}</b><br><small class="label">${escapeHtml(item.employee_role || 'Caregiver')} · ${escapeHtml(item.employee_status || 'Agreement saved')}</small></span><a class="action-link" href="employee-agreement.html?employeeName=${encodeURIComponent(item.employee_name || '')}">Open</a></div>`).join('') : '<div class="list-empty">No employee agreements saved yet.</div>';
 }
 function renderCaregivers(rows) { const root = document.getElementById('caregiverRows'); if (!root) return; root.innerHTML = rows.length ? rows.map((item, index) => { const name = [item.first_name, item.last_name].filter(Boolean).join(' ') || `Staff ${index + 1}`; const id = item.id || index + 1; return `<div class="card"><div class="person"><div class="mini">${escapeHtml(name.slice(0,2).toUpperCase())}</div><div><b>${escapeHtml(name)}</b><br><small class="label">${escapeHtml(item.role || 'Caregiver')} · ${escapeHtml(item.phone || 'No phone')}</small></div></div><div class="row"><span>Status</span>${badge(item.status || 'Certified')}</div><div class="row"><span></span><a class="action-link" href="documents.html?type=employee&employeeName=${encodeURIComponent(name)}">Employee agreement</a><button class="row-delete-btn" type="button" onclick="deleteRecord('caregivers','${id}')">Delete</button></div></div>`; }).join('') : '<div class="card"><p class="label">No matching staff members found.</p></div>'; }
 function renderTable(id, rows, columns, key) { const root = document.getElementById(id); if (!root) return; root.innerHTML = rows.length ? rows.map(item => { const recordId = item.id || Date.now(); return `<tr>${columns.map(column => `<td>${column.render ? column.render(item) : escapeHtml(item[column.key] || '—')}</td>`).join('')}<td><button class="row-delete-btn" type="button" onclick="deleteRecord('${key}','${recordId}')">Delete</button></td></tr>`; }).join('') : `<tr><td colspan="${columns.length + 1}">No records found.</td></tr>`; }

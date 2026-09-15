@@ -14,9 +14,10 @@
       <nav class="nav">
         <a class="nav button" href="index.html">Dashboard</a>
         <a class="nav button active" href="clients.html">Clients</a>
-          <a class="nav button" href="adl.html">ADL Care Plans</a>
-          <a class="nav button" href="documents.html">Documents</a>
-          <a class="nav button" href="finances.html">Finance</a>
+        <a class="nav button" href="adl.html">ADL Care Plans</a>
+        <a class="nav button" href="resident-agreement.html">Resident Agreement</a>
+        <a class="nav button" href="employee-agreement.html">Employee Agreement</a>
+        <a class="nav button" href="finances.html">Finance</a>
       </nav>
       <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
     </aside>
@@ -28,8 +29,39 @@
       </header>
 
       <section class="content">
-        <h1>Client Management</h1>
-        <div class="sub">Profiles, care plans, notes, appointments and documents.</div>
+        <div class="page-hero">
+          <div class="page-hero-copy">
+            <div class="eyebrow"><span>✦</span> Resident care</div>
+            <h1>Client Management</h1>
+            <div class="sub">Profiles, care plans, notes, appointments and documents.</div>
+            <div class="chip-row">
+              <span class="chip"><span class="chip-icon">📁</span> 18 profiles</span>
+              <span class="chip"><span class="chip-icon">✅</span> 11 compliant</span>
+              <span class="chip"><span class="chip-icon">🧾</span> 6 open forms</span>
+            </div>
+          </div>
+          <div class="page-hero-visual">
+            <div class="page-hero-card">
+              <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=900&q=80" alt="Care professional assisting resident" />
+            </div>
+          </div>
+        </div>
+
+        <div class="page-stat-strip">
+          <div class="page-stat">
+            <div class="page-stat-icon teal">👤</div>
+            <div><span>Residents</span><strong>18</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon blue">📝</div>
+            <div><span>Care plans</span><strong>9</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon green">📞</div>
+            <div><span>Follow-ups</span><strong>6</strong></div>
+          </div>
+        </div>
+
         <div class="actions">
           <button class="btn" type="button" onclick="openForm('clients')">+ Add Client</button>
           <a class="btn secondary" href="index.html">Back to Dashboard</a>

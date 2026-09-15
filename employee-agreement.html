@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - Employee Agreement</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: var(--bg); }
+    .content-wrap { max-width: 980px; margin: 0 auto; }
+    .agreement-shell { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 28px; }
+    .agreement-title { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .agreement-title h1 { margin: 0; }
+    .agreement-form { display: grid; gap: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; background: #fafbfd; }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { border: 0; border-radius: 8px; padding: 10px 15px; background: var(--blue); color: #fff; cursor: pointer; font-weight: 700; }
+    .btn.secondary { background: #edf2f7; color: var(--text); }
+    .btn.danger { background: #f7e8e8; color: #8e2d2d; }
+    .notice { border-left: 4px solid var(--teal); background: #eefaf8; color: var(--navy); padding: 12px 14px; border-radius: 10px; }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="adl.html">ADL Care Plans</a>
+        <a class="nav button" href="resident-agreement.html">Resident Agreement</a>
+        <a class="nav button active" href="employee-agreement.html">Employee Agreement</a>
+        <a class="nav button" href="finances.html">Finance</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
+        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+      </header>
+
+      <section class="content">
+        <div class="content-wrap">
+          <div class="agreement-title">
+            <div>
+              <h1>Employee Agreement</h1>
+              <div class="sub">Caregiver employment, duties, and confidentiality agreement</div>
+            </div>
+            <div class="actions">
+              <a class="btn secondary" href="staff.html">Back to Caregivers</a>
+            </div>
+          </div>
+
+          <div class="agreement-shell">
+            <div class="notice">
+              This agreement covers role expectations, resident privacy, confidentiality, and required caregiver responsibilities.
+            </div>
+
+            <form id="employeeAgreementForm" class="agreement-form">
+              <div class="grid">
+                <div class="field">
+                  <label for="employee_name">Employee Full Name</label>
+                  <input id="employee_name" name="employee_name" type="text">
+                </div>
+                <div class="field">
+                  <label for="employee_role">Role</label>
+                  <input id="employee_role" name="employee_role" type="text">
+                </div>
+                <div class="field">
+                  <label for="employee_effective_date">Agreement Effective Date</label>
+                  <input id="employee_effective_date" name="employee_effective_date" type="date">
+                </div>
+                <div class="field">
+                  <label for="employee_status">Employment Status</label>
+                  <select id="employee_status" name="employee_status">
+                    <option value="">Select</option>
+                    <option>Active</option>
+                    <option>On Call</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid">
+                <div class="field full">
+                  <label for="employee_responsibilities">Responsibilities and Duties</label>
+                  <textarea id="employee_responsibilities" name="employee_responsibilities"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="employee_confidentiality">Confidentiality, Privacy, and Resident Rights Agreement</label>
+                  <textarea id="employee_confidentiality" name="employee_confidentiality"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="employee_training">Training and Credential Requirements</label>
+                  <textarea id="employee_training" name="employee_training"></textarea>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn" type="submit">Save Agreement</button>
+                <button class="btn secondary" type="button" onclick="clearEmployeeAgreement()">Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const form = document.getElementById('employeeAgreementForm');
+
+    function loadEmployeeAgreement() {
+      const params = new URLSearchParams(window.location.search);
+      const employeeName = params.get('employeeName') || '';
+      const saved = JSON.parse(localStorage.getItem('employeeAgreements') || '[]');
+      const matching = saved.find(item => String(item.employee_name || '').toLowerCase() === employeeName.toLowerCase());
+      const data = matching || {};
+
+      if (employeeName && !data.employee_name) {
+        data.employee_name = employeeName;
+      }
+
+      Object.entries(data).forEach(([key, value]) => {
+        const field = form.querySelector(`[name="${key}"]`);
+        if (field) field.value = value;
+      });
+    }
+
+    function clearEmployeeAgreement() {
+      form.reset();
+      localStorage.removeItem('employeeAgreements');
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const existing = JSON.parse(localStorage.getItem('employeeAgreements') || '[]');
+      const key = String(data.employee_name || '').trim();
+      const index = existing.findIndex(item => String(item.employee_name || '').toLowerCase() === key.toLowerCase());
+
+      if (index >= 0) existing[index] = data;
+      else existing.push(data);
+
+      localStorage.setItem('employeeAgreements', JSON.stringify(existing));
+      alert('Employee agreement saved.');
+    });
+
+    window.addEventListener('DOMContentLoaded', loadEmployeeAgreement);
+  </script>
+</body>
+</html>

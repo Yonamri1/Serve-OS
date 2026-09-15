@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOne - Resident Agreement</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: var(--bg); }
+    .content-wrap { max-width: 1100px; margin: 0 auto; }
+    .agreement-shell { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 28px; }
+    .agreement-title { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .agreement-title h1 { margin: 0; }
+    .agreement-form { display: grid; gap: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; background: #fafbfd; }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { border: 0; border-radius: 8px; padding: 10px 15px; background: var(--blue); color: #fff; cursor: pointer; font-weight: 700; }
+    .btn.secondary { background: #edf2f7; color: var(--text); }
+    .btn.danger { background: #f7e8e8; color: #8e2d2d; }
+    .notice { border-left: 4px solid var(--blue); background: #eef6ff; color: var(--navy); padding: 12px 14px; border-radius: 10px; }
+    .section { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    .section h2 { margin: 0 0 16px; color: var(--navy); }
+    .section h3 { margin: 16px 0 10px; color: var(--navy); }
+    .checklist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+    .checklist label { display: flex; align-items: center; gap: 8px; color: var(--text); }
+    .checklist input { accent-color: var(--blue); }
+    .signature-box { border-bottom: 1px solid #3a4656; min-height: 40px; margin-top: 8px; }
+    @media (max-width: 700px) { .grid, .checklist { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Care<span>One</span></div>
+      <div class="home">Workspace</div>
+      <nav class="nav">
+        <a class="nav button" href="index.html">Dashboard</a>
+        <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="adl.html">ADL Care Plans</a>
+        <a class="nav button active" href="resident-agreement.html">Resident Agreement</a>
+        <a class="nav button" href="employee-agreement.html">Employee Agreement</a>
+        <a class="nav button" href="documents.html">Documents</a>
+        <a class="nav button" href="finances.html">Finance</a>
+      </nav>
+      <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
+        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+      </header>
+
+      <section class="content">
+        <div class="content-wrap">
+          <div class="agreement-title">
+            <div>
+              <h1>Resident Agreement</h1>
+              <div class="sub">Adult foster home residency and service agreement</div>
+            </div>
+            <div class="actions">
+              <a class="btn secondary" href="clients.html">Back to Clients</a>
+            </div>
+          </div>
+
+          <div class="agreement-shell">
+            <div class="notice">
+              This agreement records resident details, care expectations, household policy, rights, and the agreed support plan for the home.
+            </div>
+
+            <form id="residentAgreementForm" class="agreement-form">
+              <div class="section">
+                <h2>1. Resident and Adult Foster Home Information</h2>
+                <div class="grid">
+                  <div class="field"><label>Resident Full Name</label><input type="text" name="resident_name"></div>
+                  <div class="field"><label>Date of Birth</label><input type="date" name="dob"></div>
+                  <div class="field"><label>AFH / Home Name</label><input type="text" name="home_name"></div>
+                  <div class="field"><label>AFH License Number</label><input type="text" name="license_number"></div>
+                  <div class="field"><label>Provider / Licensee Name</label><input type="text" name="provider"></div>
+                  <div class="field"><label>Resident Manager</label><input type="text" name="manager"></div>
+                  <div class="field full"><label>AFH Address</label><input type="text" name="address"></div>
+                  <div class="field"><label>Phone</label><input type="tel" name="phone"></div>
+                  <div class="field"><label>Email</label><input type="email" name="email"></div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h2>2. Admission and Agreement Term</h2>
+                <div class="grid">
+                  <div class="field"><label>Admission Date</label><input type="date" name="admission_date"></div>
+                  <div class="field"><label>Agreement Effective Date</label><input type="date" name="effective_date"></div>
+                </div>
+                <div class="field" style="margin-top:14px;"><label>Special admission conditions or agreements</label><textarea name="admission_conditions"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>3. Services and Supports</h2>
+                <div class="checklist">
+                  <label><input type="checkbox" name="service_room_board"> Room and board</label>
+                  <label><input type="checkbox" name="service_meals"> Meals and snacks</label>
+                  <label><input type="checkbox" name="service_laundry"> Laundry</label>
+                  <label><input type="checkbox" name="service_personal_care"> Personal care assistance</label>
+                  <label><input type="checkbox" name="service_medication"> Medication assistance</label>
+                  <label><input type="checkbox" name="service_mobility"> Mobility assistance</label>
+                  <label><input type="checkbox" name="service_transfers"> Transfers</label>
+                  <label><input type="checkbox" name="service_toileting"> Toileting / incontinence support</label>
+                  <label><input type="checkbox" name="service_bathing"> Bathing / grooming assistance</label>
+                  <label><input type="checkbox" name="service_transport"> Transportation assistance</label>
+                  <label><input type="checkbox" name="service_housekeeping"> Housekeeping</label>
+                  <label><input type="checkbox" name="service_coordination"> Care coordination</label>
+                </div>
+                <div class="field" style="margin-top:14px;"><label>Additional services and supports</label><textarea name="additional_services"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>4. Rates, Charges, and Payment</h2>
+                <div class="grid">
+                  <div class="field"><label>Basic Monthly Rate</label><input type="number" step="0.01" name="monthly_rate"></div>
+                  <div class="field"><label>Payment Due Date</label><input type="text" name="payment_due"></div>
+                </div>
+                <div class="field" style="margin-top:14px;"><label>Payment Source</label><select name="payment_source"><option value="">Select</option><option>Private Pay</option><option>Medicaid / Department Authorized</option><option>Other</option></select></div>
+                <div class="field" style="margin-top:14px;"><label>Additional Authorized Charges</label><textarea name="additional_charges"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>5. Resident Rights and Responsibilities</h2>
+                <div class="checklist">
+                  <label><input type="checkbox" name="rights_privacy"> Privacy</label>
+                  <label><input type="checkbox" name="rights_dignity"> Dignity and respectful treatment</label>
+                  <label><input type="checkbox" name="rights_freedom"> Freedom from abuse and neglect</label>
+                  <label><input type="checkbox" name="rights_visitors"> Visitors of choice</label>
+                  <label><input type="checkbox" name="rights_choice"> Choice of activities and schedule</label>
+                  <label><input type="checkbox" name="rights_participation"> Participation in care planning</label>
+                </div>
+                <div class="field" style="margin-top:14px;"><label>Additional rights information</label><textarea name="rights_information"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>6. House Policies</h2>
+                <div class="field"><label>Alcohol policy</label><textarea name="alcohol_policy"></textarea></div>
+                <div class="field" style="margin-top:14px;"><label>Tobacco and smoking policy</label><textarea name="tobacco_policy"></textarea></div>
+                <div class="field" style="margin-top:14px;"><label>Animals / pets policy</label><textarea name="animal_policy"></textarea></div>
+                <div class="field" style="margin-top:14px;"><label>Monitoring devices and privacy policy</label><textarea name="monitor_policy"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>7. Meals, Food Access, and Dietary Needs</h2>
+                <div class="field"><label>Meals and snack schedule</label><textarea name="meal_schedule"></textarea></div>
+                <div class="field" style="margin-top:14px;"><label>Special diet / allergies / cultural or religious dietary needs</label><textarea name="dietary_needs"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>8. Medication and Health Support</h2>
+                <div class="field"><label>Medication assistance provided</label><textarea name="medication_support"></textarea></div>
+                <div class="field" style="margin-top:14px;"><label>Emergency contact information</label><textarea name="emergency_contact_info"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>9. Personal Belongings and Bedroom Agreement</h2>
+                <div class="field"><label>Bedroom / room number</label><input type="text" name="bedroom"></div>
+                <div class="field" style="margin-top:14px;"><label>Personal belongings and storage policy</label><textarea name="belongings_policy"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>10. Visitor, Privacy, and Communication</h2>
+                <div class="field"><label>Visitor policy</label><textarea name="visitor_policy"></textarea></div>
+                <div class="field" style="margin-top:14px;"><label>Communication / phone / internet arrangements</label><textarea name="communication_policy"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>11. Voluntary Move, Transfer, and Discharge</h2>
+                <div class="field"><label>Notice and discharge policy</label><textarea name="discharge_policy"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>12. Complaint and Grievance Process</h2>
+                <div class="field"><label>How to submit a complaint</label><textarea name="complaint_process"></textarea></div>
+              </div>
+
+              <div class="section">
+                <h2>13. Signatures</h2>
+                <div class="grid">
+                  <div class="field"><label>Resident Signature</label><div class="signature-box"></div></div>
+                  <div class="field"><label>Date</label><input type="date" name="resident_signature_date"></div>
+                  <div class="field"><label>Resident Representative</label><div class="signature-box"></div></div>
+                  <div class="field"><label>Date</label><input type="date" name="representative_signature_date"></div>
+                  <div class="field"><label>Provider / Licensee Signature</label><div class="signature-box"></div></div>
+                  <div class="field"><label>Date</label><input type="date" name="provider_signature_date"></div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn" type="submit">Save Agreement</button>
+                <button class="btn secondary" type="button" onclick="clearResidentAgreement()">Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const form = document.getElementById('residentAgreementForm');
+
+    function loadResidentAgreement() {
+      const params = new URLSearchParams(window.location.search);
+      const saved = JSON.parse(localStorage.getItem('residentAgreements') || '[]');
+      const clientName = params.get('clientName') || '';
+      const matching = saved.find(item => String(item.resident_name || '').toLowerCase() === clientName.toLowerCase());
+      const data = matching || JSON.parse(localStorage.getItem('residentAgreement') || '{}');
+
+      if (clientName && !data.resident_name) {
+        data.resident_name = clientName;
+      }
+
+      Object.entries(data).forEach(([key, value]) => {
+        const field = form.querySelector(`[name="${key}"]`);
+        if (field) {
+          if (field.type === 'checkbox') field.checked = !!value;
+          else field.value = value;
+        }
+      });
+    }
+
+    function clearResidentAgreement() {
+      form.reset();
+      localStorage.removeItem('residentAgreement');
+      localStorage.removeItem('residentAgreements');
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const data = {};
+      const formData = new FormData(form);
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      const existing = JSON.parse(localStorage.getItem('residentAgreements') || '[]');
+      const key = String(data.resident_name || '').trim();
+      const index = existing.findIndex(item => String(item.resident_name || '').toLowerCase() === key.toLowerCase());
+
+      if (index >= 0) existing[index] = data;
+      else existing.push(data);
+
+      localStorage.setItem('residentAgreements', JSON.stringify(existing));
+      localStorage.setItem('residentAgreement', JSON.stringify(data));
+      alert('Resident agreement saved.');
+    });
+
+    window.addEventListener('DOMContentLoaded', loadResidentAgreement);
+  </script>
+</body>
+</html>
+

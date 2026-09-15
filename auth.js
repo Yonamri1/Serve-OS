@@ -1,10 +1,9 @@
 const SUPABASE_URL = "https://zsmilczlumqkdpthlpto.supabase.co";
 const SUPABASE_KEY = "sb_publishable__Oq50W1WSRfYcae0StNicg_FrzPwRTB";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const supabaseClient = window.supabase && window.supabase.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
 
 
 // =========================
@@ -13,7 +12,12 @@ const supabaseClient = window.supabase.createClient(
 
 const registerForm = document.getElementById("registerForm");
 
-if (registerForm) {
+if (!supabaseClient && registerForm) {
+  const message = document.getElementById("message");
+  if (message) message.textContent = "Supabase is not available. Please load the Supabase client before auth.js.";
+}
+
+if (registerForm && supabaseClient) {
 
   registerForm.addEventListener("submit", async function(event) {
 
@@ -73,7 +77,7 @@ if (registerForm) {
 
 const signinForm = document.getElementById("signinForm");
 
-if (signinForm) {
+if (signinForm && supabaseClient) {
 
   signinForm.addEventListener("submit", async function(event) {
 

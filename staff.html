@@ -15,6 +15,7 @@
         <a class="nav button" href="index.html">Dashboard</a>
         <a class="nav button" href="clients.html">Clients</a>
         <a class="nav button active" href="staff.html">Caregivers</a>
+        <a class="nav button" href="staff-schedule.html">Staff Schedule</a>
       </nav>
       <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
     </aside>
@@ -26,11 +27,43 @@
       </header>
 
       <section class="content">
-        <h1>Caregiver Management</h1>
-        <div class="sub">Scheduling, credentials, training and shift coverage.</div>
+        <div class="page-hero">
+          <div class="page-hero-copy">
+            <div class="eyebrow"><span>✦</span> Team coverage</div>
+            <h1>Caregiver Management</h1>
+            <div class="sub">Scheduling, credentials, training and shift coverage.</div>
+            <div class="chip-row">
+              <span class="chip"><span class="chip-icon">🧑‍⚕️</span> 19 active</span>
+              <span class="chip"><span class="chip-icon">🏅</span> 7 certified</span>
+              <span class="chip"><span class="chip-icon">🧠</span> 2 trainings</span>
+            </div>
+          </div>
+          <div class="page-hero-visual">
+            <div class="page-hero-card">
+              <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=80" alt="Caregiver team discussing patient care" />
+            </div>
+          </div>
+        </div>
+
+        <div class="page-stat-strip">
+          <div class="page-stat">
+            <div class="page-stat-icon teal">👩‍⚕️</div>
+            <div><span>Staff</span><strong>19</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon blue">🧾</div>
+            <div><span>Agreements</span><strong>12</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon pink">📚</div>
+            <div><span>Training</span><strong>4 due</strong></div>
+          </div>
+        </div>
+
         <div class="actions">
           <button class="btn" type="button" onclick="openForm('caregivers')">+ Add Caregiver</button>
-          <a class="btn secondary" href="documents.html?type=employee">Employee Agreements</a>
+          <a class="btn secondary" href="staff-schedule.html">Staff Schedule</a>
+          <a class="btn secondary" href="employee-agreement.html">Employee Agreement</a>
           <a class="btn secondary" href="index.html">Back to Dashboard</a>
         </div>
         <div id="caregiverRows" class="grid"></div>

@@ -14,10 +14,16 @@
       <nav class="nav">
         <a class="nav button active" href="index.html">Dashboard</a>
         <a class="nav button" href="clients.html">Clients</a>
+        <a class="nav button" href="adl.html">ADL Care Plans</a>
+        <a class="nav button" href="resident-agreement.html">Resident Agreement</a>
+        <a class="nav button" href="employee-agreement.html">Employee Agreement</a>
         <a class="nav button" href="staff.html">Caregivers</a>
+        <a class="nav button" href="staff-schedule.html">Staff Schedule</a>
         <a class="nav button" href="appointments.html">Appointments</a>
         <a class="nav button" href="meal-plan.html">Meal Plans</a>
+        <a class="nav button" href="medication.html">Medication</a>
         <a class="nav button" href="finances.html">Finance</a>
+        <a class="nav button" href="documents.html">Documents</a>
       </nav>
       <div class="help">Need help?<br><b>CareOne Support</b><br>support@careone.example</div>
     </aside>
@@ -25,12 +31,58 @@
     <main class="main">
       <header class="top">
         <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        <div class="top-actions">
+          <div class="auth-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+          </div>
+          <div class="profile">
+            <div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div>
+            <div class="avatar">AM</div>
+          </div>
+        </div>
       </header>
 
       <section class="content">
-        <h1>Good afternoon, Administrator</h1>
-        <div class="sub">A live view of care, coverage, compliance, and cash flow.</div>
+        <div class="page-hero">
+          <div class="page-hero-copy">
+            <div class="eyebrow"><span>✦</span> Live operations</div>
+            <h1>Good afternoon, Administrator</h1>
+            <div class="sub">A live view of care, coverage, compliance, and cash flow.</div>
+            <div class="chip-row">
+              <span class="chip"><span class="chip-icon">🏠</span> 12 homes</span>
+              <span class="chip"><span class="chip-icon">📊</span> 94% coverage</span>
+              <span class="chip"><span class="chip-icon">🛡️</span> 6 alerts</span>
+            </div>
+          </div>
+          <div class="page-hero-visual">
+            <div class="page-hero-card">
+              <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80" alt="Healthcare team reviewing care dashboard" />
+            </div>
+          </div>
+        </div>
+
+        <div class="page-stat-strip">
+          <div class="page-stat">
+            <div class="page-stat-icon teal">👥</div>
+            <div><span>Residents</span><strong>48</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon blue">🩺</div>
+            <div><span>Caregivers</span><strong>19</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon amber">💰</div>
+            <div><span>Cash flow</span><strong>$8.6k</strong></div>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-bottom: 18px;">
+          <a class="btn" href="clients.html">+ Add Client</a>
+          <a class="btn secondary" href="resident-agreement.html">Resident Agreement</a>
+          <a class="btn secondary" href="documents.html">Documents</a>
+        </div>
+
         <div id="dashboardKpis" class="grid dashboard-kpis"></div>
 
         <div class="dashboard-layout">
@@ -68,318 +120,6 @@
 </body>
 </html>
 
-  clients: {
-    title: 'Add Client',
-    fields: [
-      ['first_name', 'First Name', 'text'],
-      ['last_name', 'Last Name', 'text'],
-      ['room', 'Room', 'text'],
-      ['admission_date', 'Admission Date', 'date'],
-      ['status', 'Status', 'text'],
-      ['medical_history', 'Medical History', 'textarea'],
-      ['care_plan', 'Care Plan', 'textarea']
-    ]
-  },
-  caregivers: {
-    title: 'Add Staff Member',
-    fields: [
-      ['first_name', 'First Name', 'text'],
-      ['last_name', 'Last Name', 'text'],
-      ['role', 'Role', 'text'],
-      ['phone', 'Phone', 'text'],
-      ['status', 'Status', 'text']
-    ]
-  },
-  meal_plans: {
-    title: 'Add Meal',
-    fields: [
-      ['meal_type', 'Meal Type', 'select', ['Breakfast', 'Lunch', 'Dinner', 'Snack']],
-      ['menu', 'Menu', 'textarea'],
-      ['updated_date', 'Updated Date', 'date']
-    ]
-  },
-  medications: {
-    title: 'Add Medication',
-    fields: [
-      ['client_id', 'Client ID', 'number'],
-      ['medication_name', 'Medication Name', 'text'],
-      ['dosage', 'Dosage', 'text'],
-      ['schedule', 'Schedule', 'text'],
-      ['status', 'Status', 'text']
-    ]
-  },
-  appointments: {
-    title: 'Add Appointment',
-    fields: [
-      ['client_name', 'Client Name', 'text'],
-      ['reason_for_visit', 'Reason for Visit', 'textarea'],
-      ['location', 'Location', 'text'],
-      ['contact_information', 'Contact Information', 'text'],
-      ['appointment_datetime', 'Appointment Date/Time', 'datetime-local'],
-      ['notes', 'Notes', 'textarea']
-    ]
-  },
-  finance: {
-    title: 'Add Finance Record',
-    fields: [
-      ['entry_type', 'Entry Type', 'select', ['revenue', 'expense']],
-      ['category', 'Category', 'text'],
-      ['client_name', 'Client Name', 'text'],
-      ['caregiver_name', 'Caregiver Name', 'text'],
-      ['amount', 'Amount', 'number'],
-      ['month', 'Month', 'text'],
-      ['notes', 'Notes', 'textarea']
-    ]
-  },
-  policy_updates: {
-    title: 'Add Policy Update',
-    fields: [
-      ['title', 'Title', 'text'],
-      ['effective_date', 'Effective Date', 'date'],
-      ['details', 'Details', 'textarea']
-    ]
-  },
-  credential_trainings: {
-    title: 'Add Training Record',
-    fields: [
-      ['title', 'Title', 'text'],
-      ['due_date', 'Due Date', 'date'],
-      ['status', 'Status', 'text'],
-      ['details', 'Details', 'textarea']
-    ]
-  },
-  staff_schedules: {
-    title: 'Add Staff Schedule',
-    fields: [
-      ['caregiver_name', 'Caregiver Name', 'text'],
-      ['shift', 'Shift', 'select', ['Day', 'Night']],
-      ['status', 'Status', 'select', ['Regular', 'On Call']],
-      ['days', 'Days', 'text'],
-      ['notes', 'Notes', 'textarea']
-    ]
-  }
-};
-
-function showPage(id, btn){
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
- const target = document.getElementById(id);
- if(target) target.classList.add('active');
- document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
- if(btn) btn.classList.add('active');
-}
-
-function quickSearch(q){
- q=q.toLowerCase().trim();
- if(!q)return;
- const rows=[...document.querySelectorAll('#clientRows tr')];
- const match=rows.find(r=>r.innerText.toLowerCase().includes(q));
- if(match){
-   showPage('clients',document.querySelectorAll('.nav button')[1]);
-   match.scrollIntoView({behavior:'smooth',block:'center'});
- }
-}
-
-function openForm(tableName){
-  const config = FORM_CONFIG[tableName];
-  if (!config) {
-    alert('No form defined for this table yet.');
-    return;
-  }
-
-  const formFields = document.getElementById('formFields');
-  formFields.innerHTML = config.fields.map(([name, label, type, options]) => {
-    const isTextArea = type === 'textarea';
-    const isSelect = type === 'select';
-    return `
-      <div class="field ${isTextArea ? 'full' : ''}">
-        <label for="${name}">${label}</label>
-        ${isSelect ? `
-          <select id="${name}" name="${name}">
-            ${options.map(option => `<option value="${option}">${option}</option>`).join('')}
-          </select>
-        ` : isTextArea ? `
-          <textarea id="${name}" name="${name}" placeholder="${label}"></textarea>
-        ` : `
-          <input id="${name}" name="${name}" type="${type}" />
-        `}
-      </div>
-    `;
-  }).join('');
-
-  document.getElementById('modalTitle').textContent = config.title;
-  document.getElementById('recordModal').classList.add('show');
-  document.getElementById('recordForm').dataset.table = tableName;
-}
-
-function closeModal(){
-  const modal = document.getElementById('recordModal');
-  const form = document.getElementById('recordForm');
-  modal.classList.remove('show');
-  form.reset();
-}
-
-function formatBadge(value, fallback='Status'){
-  const text = String(value || fallback).trim() || fallback;
-  return `<span class="badge">${text}</span>`;
-}
-
-function escapeHtml(value){
-  return String(value ?? '').replace(/[&<>'"]/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[character]));
-}
-
-function renderDashboard(){
-  const { clients, caregivers, appointments, medications, schedules, finance, policies, trainings } = dashboardData;
-  const kpiRoot = document.getElementById('dashboardKpis');
-  const agendaRoot = document.getElementById('dashboardAgenda');
-  const attentionRoot = document.getElementById('dashboardAttention');
-  const coverageRoot = document.getElementById('dashboardCoverage');
-  const healthRoot = document.getElementById('dashboardHealth');
-  if (!kpiRoot || !agendaRoot || !attentionRoot || !coverageRoot || !healthRoot) return;
-
-  const revenue = finance.reduce((total, item) => total + (String(item.entry_type).toLowerCase() === 'expense' ? 0 : Number(item.amount || 0)), 0);
-  const dueMedications = medications.filter(item => /pending|due|attention|refill/i.test(`${item.status} ${item.last_mar}`));
-  const today = new Date();
-  const weekday = today.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase().slice(0, 3);
-  const upcomingAppointments = appointments
-    .filter(item => item.appointment_datetime && new Date(item.appointment_datetime) >= new Date())
-    .sort((a, b) => new Date(a.appointment_datetime) - new Date(b.appointment_datetime));
-  const todayShifts = schedules.filter(item => String(item.days || item.day || '').toLowerCase().includes(weekday) || (!item.days && !item.day));
-  const activeClients = clients.filter(item => !/inactive|discharged/i.test(item.status || ''));
-
-  const kpis = [
-    ['Active clients', activeClients.length, `${clients.length} total records`, '♙'],
-    ['Caregivers', caregivers.length, `${todayShifts.length} scheduled today`, '♧'],
-    ['Medication alerts', dueMedications.length, dueMedications.length ? 'Review before next window' : 'All recorded tasks clear', '✚'],
-    ['Upcoming visits', upcomingAppointments.length, upcomingAppointments.length ? 'Next visit below' : 'No future visits recorded', '📅'],
-    ['Recorded revenue', `$${revenue.toLocaleString()}`, finance.length ? 'From finance records' : 'No finance records yet', '$']
-  ];
-  kpiRoot.innerHTML = kpis.map(([label, value, note, icon]) => `<div class="card stat"><div><div class="label">${label}</div><div class="num">${value}</div><div class="metric-note">${note}</div></div><div class="icon">${icon}</div></div>`).join('');
-
-  const agenda = upcomingAppointments.slice(0, 4).map(item => {
-    const date = new Date(item.appointment_datetime);
-    return `<div class="row"><div><b>${escapeHtml(item.client_name || 'Client visit')}</b><br><small class="label">${escapeHtml(item.reason_for_visit || 'Appointment')} · ${date.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' })}</small></div><span class="badge info">Upcoming</span></div>`;
-  });
-  agendaRoot.innerHTML = agenda.length ? agenda.join('') : '<div class="list-empty">No upcoming appointments recorded.</div>';
-
-  const attention = dueMedications.slice(0, 4).map(item => `<div class="row"><div><b>${escapeHtml(item.medication_name || 'Medication task')}</b><small class="label">${escapeHtml(item.client_id ? `Client ${item.client_id}` : 'Client not linked')} · ${escapeHtml(item.schedule || 'Schedule not set')}</small></div><span class="badge warn">Review</span></div>`);
-  const overdueTraining = trainings.filter(item => /due|overdue|pending/i.test(item.status || ''));
-  if (overdueTraining.length) attention.push(`<div class="row"><div><b>${overdueTraining.length} training record${overdueTraining.length === 1 ? '' : 's'}</b><small class="label">Credential follow-up required</small></div><span class="badge danger">Action</span></div>`);
-  attentionRoot.innerHTML = attention.length ? attention.join('') : '<div class="list-empty">Nothing needs attention right now.</div>';
-
-  const coveragePercent = caregivers.length ? Math.min(100, Math.round((todayShifts.length / caregivers.length) * 100)) : 0;
-  coverageRoot.innerHTML = `<div class="summary-row"><span class="label">Scheduled shifts</span><b>${todayShifts.length}</b></div><div class="progress"><i style="width:${coveragePercent}%"></i></div><div class="summary-row"><span class="label">Caregivers on record</span><b>${caregivers.length}</b></div>${todayShifts.length ? todayShifts.slice(0, 3).map(item => `<div class="row"><span>${escapeHtml(item.caregiver_name || item.staff_name || 'Caregiver')}</span>${formatBadge(item.shift || 'Scheduled')}</div>`).join('') : '<div class="list-empty">No shifts recorded for today.</div>'}`;
-
-  const policyRate = policies.length ? Math.round((policies.filter(item => /acknowledged|complete|current/i.test(item.status || item.details || '')).length / policies.length) * 100) : 0;
-  const documentationRate = clients.length ? Math.round((clients.filter(item => item.care_plan).length / clients.length) * 100) : 0;
-  const trainingRate = trainings.length ? Math.round((trainings.filter(item => /complete|current|certified/i.test(item.status || '')).length / trainings.length) * 100) : 0;
-  const healthMetrics = [['Care plans documented', documentationRate], ['Training current', trainingRate], ['Policies current', policyRate]];
-  healthRoot.innerHTML = healthMetrics.map(([label, value]) => `<div class="row"><span>${label}</span><b>${value}%</b></div><div class="progress"><i style="width:${value}%"></i></div>`).join('');
-}
-
-function getUniqueTableNames(items){
-  return [...new Set((items || []).filter(Boolean))];
-}
-
-async function resolveTableName(key) {
-  if (!supabaseClient) return TABLE_ALIASES[key][0];
-
-  for (const candidate of TABLE_ALIASES[key] || []) {
-    try {
-      const { error } = await supabaseClient.from(candidate).select('*').limit(1);
-      if (!error) return candidate;
-    } catch (_) {
-      // continue trying alternative names
-    }
-  }
-
-  return TABLE_ALIASES[key][0];
-}
-
-async function fetchTableNames() {
-  const list = document.getElementById('databaseTables');
-  if (!list) return [];
-
-  const names = [];
-  for (const key of Object.keys(TABLE_ALIASES)) {
-    const resolved = await resolveTableName(key);
-    if (resolved && !names.includes(resolved)) names.push(resolved);
-  }
-
-  list.innerHTML = names.map(name => `<span class="db-tag">${name}</span>`).join('');
-  return names;
-}
-
-async function safeSelect(tableKey) {
-  if (!supabaseClient) return getLocalRecords(tableKey);
-  const resolvedName = await resolveTableName(tableKey);
-  try {
-    const { data, error } = await supabaseClient.from(resolvedName).select('*');
-    if (error) {
-      console.warn(`Could not read ${resolvedName}:`, error.message || error);
-      return getLocalRecords(tableKey);
-    }
-    return Array.isArray(data) ? data : [];
-  } catch (error) {
-    console.warn(`Failed to select ${resolvedName}:`, error);
-    return getLocalRecords(tableKey);
-  }
-}
-
-async function insertIntoTable(tableKey, payload) {
-  if (!supabaseClient) {
-    const localResult = createLocalRecord(tableKey, payload);
-    return localResult;
-  }
-
-  const resolvedName = await resolveTableName(tableKey);
-  try {
-    const { data, error } = await supabaseClient.from(resolvedName).insert(payload).select();
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error('Insert failed:', error);
-    const localResult = createLocalRecord(tableKey, payload);
-    console.warn('Saved record locally instead because Supabase insert failed.');
-    return localResult;
-  }
-}
-
-function renderClientRows(data) {
-  const holder = document.getElementById('clientRows');
-  if (!holder) return;
-  if (!data.length) {
-    holder.innerHTML = '<div class="card"><p class="label">No client records found.</p></div>';
-    return;
-  }
-
-  holder.innerHTML = data.map((client, index) => {
-    const firstName = client.first_name || '';
-    const lastName = client.last_name || '';
-    const name = [firstName, lastName].filter(Boolean).join(' ') || `Client ${index + 1}`;
-    const room = client.room || '-';
-    const carePlan = client.care_plan || 'Not available';
-    const admissionDate = client.admission_date ? new Date(client.admission_date).toLocaleDateString() : '-';
-    const status = client.status || 'Stable';
-    const idValue = client.id || `${String(index + 1).padStart(3, '0')}`;
-    const initials = name.split(' ').map(part => part[0]).join('').slice(0, 2).toUpperCase();
-    return `
-      <div class="card" data-id="${idValue}">
-        <div class="person">
-          <div class="mini">${initials}</div>
-          <div><b>${name}</b><br><small class="label">ID: ${idValue}</small></div>
-        </div>
-        <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
-        <div class="row"><span>Room</span><b>${room}</b></div>
-        <div class="row"><span>Care plan</span><b>${carePlan}</b></div>
-        <div class="row"><span>Next review</span><b>${admissionDate}</b></div>
-        <div class="row"><span>Status</span>${formatBadge(status)}</div>
-        <div class="row" style="padding-bottom:0">
-          <span></span>
-          <button class="row-delete-btn" type="button" onclick="deleteRecord('clients', '${idValue}')">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join('');
 }
 
 function renderCaregiverRows(data) {
