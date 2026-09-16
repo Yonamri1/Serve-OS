@@ -405,6 +405,74 @@ async function loadAll() {
 }
 async function deleteRecord(key, id) { if (supabaseClient) { const name = await resolveTableName(key); try { await supabaseClient.from(name).delete().eq('id', id); } catch (_) {} } const rows = getLocalRecords(key).filter(item => String(item.id) !== String(id)); saveLocalRecords(key, rows); await loadAll(); }
 
-document.getElementById('recordForm').addEventListener('submit', async event => { event.preventDefault(); const payload = {}; for (const [key, value] of new FormData(event.currentTarget)) { const normalized = normalize(key, value); if (normalized !== undefined) payload[key] = normalized; } await insertRecord(event.currentTarget.dataset.table, payload); closeModal(); await loadAll(); });
+function assistantReply(message) {
+  const query = message.toLowerCase();
+  const { clients, caregivers, appointments, medications, finance } = dashboardData;
+  if (/\b(hi|hello|hey)\b/.test(query)) return 'Hello. I can help you find CareOne records and summarize today\'s operations.';
+  if (/\b(help|what can you do)\b/.test(query)) return 'Try asking about residents, caregivers, appointments, medications, alerts, or cash flow. I can also point you to the right workspace page.';
+  if (/medication|meds|mar|dose/.test(query)) {
+    const attention = medications.filter(item => /pending|due|attention|refill|overdue/i.test(`${item.status || ''} ${item.last_mar || ''}`)).length;
+    return `${medications.length} medication record${medications.length === 1 ? '' : 's'} are loaded, with ${attention} needing attention. Open Medication to review the MAR; never use this assistant as a substitute for clinical judgment.`;
+  }
+  if (/appointment|visit|schedule/.test(query)) return `${appointments.length} appointment${appointments.length === 1 ? '' : 's'} are loaded. ${appointments.filter(item => item.appointment_datetime && new Date(item.appointment_datetime) >= new Date()).length} ${appointments.length === 1 ? 'is' : 'are'} upcoming. Open Appointments to make changes.`;
+  if (/resident|client|people/.test(query)) return `There ${clients.length === 1 ? 'is' : 'are'} ${clients.length} active client${clients.length === 1 ? '' : 's'} in the current records. Open Clients to review care plans, notes, medications, and follow-ups.`;
+  if (/staff|caregiver|coverage/.test(query)) return `${caregivers.length} caregiver${caregivers.length === 1 ? '' : 's'} are loaded. Open Caregivers or Staff Schedule to review coverage and agreements.`;
+  if (/finance|money|cash|revenue|expense/.test(query)) {
+    const revenue = finance.reduce((sum, item) => sum + (String(item.entry_type || '').toLowerCase() === 'expense' ? 0 : Number(item.amount || 0)), 0);
+    const expenses = finance.reduce((sum, item) => sum + (String(item.entry_type || '').toLowerCase() === 'expense' ? Number(item.amount || 0) : 0), 0);
+    return `Current recorded revenue is $${revenue.toLocaleString()} and expenses are $${expenses.toLocaleString()}, for a net of $${(revenue - expenses).toLocaleString()}. Open Finance for the full ledger.`;
+  }
+  if (/alert|attention|urgent/.test(query)) {
+    const alerts = medications.filter(item => /pending|due|attention|refill|overdue/i.test(`${item.status || ''} ${item.last_mar || ''}`)).length;
+    return `I found ${alerts} medication alert${alerts === 1 ? '' : 's'} in the loaded records. Review the Medication page for details.`;
+  }
+  return 'I can summarize residents, caregivers, appointments, medications, alerts, and finance records. What would you like to check?';
+}
+
+function initCareOneAssistant() {
+  if (document.getElementById('careoneAssistant')) return;
+  const widget = document.createElement('section');
+  widget.id = 'careoneAssistant';
+  widget.className = 'assistant-widget';
+  widget.innerHTML = `<button class="assistant-launcher" type="button" aria-expanded="false" aria-controls="assistantPanel"><span class="assistant-launcher-icon">✦</span><span>CareOne AI</span></button><div id="assistantPanel" class="assistant-panel" hidden><div class="assistant-header"><div><strong>CareOne AI</strong><small>Workspace assistant</small></div><button class="assistant-close" type="button" aria-label="Close assistant">×</button></div><div class="assistant-messages" aria-live="polite"><div class="assistant-message assistant-message-bot">Hi, I’m your CareOne assistant. Ask about today’s records or where to find something.</div></div><form class="assistant-form"><input name="message" autocomplete="off" placeholder="Ask about your workspace..." aria-label="Ask CareOne AI" required><button type="submit" aria-label="Send message">Send</button></form><small class="assistant-disclaimer">AI summaries can be incomplete. Verify care decisions in the source record.</small></div>`;
+  document.body.appendChild(widget);
+  const launcher = widget.querySelector('.assistant-launcher');
+  const panel = widget.querySelector('.assistant-panel');
+  const close = widget.querySelector('.assistant-close');
+  const messages = widget.querySelector('.assistant-messages');
+  const form = widget.querySelector('.assistant-form');
+  const input = form.querySelector('input');
+  const setOpen = (open) => { panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); if (open) input.focus(); };
+  launcher.addEventListener('click', () => setOpen(panel.hidden));
+  close.addEventListener('click', () => setOpen(false));
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+    messages.insertAdjacentHTML('beforeend', `<div class="assistant-message assistant-message-user">${escapeHtml(message)}</div>`);
+    input.value = '';
+    const pending = document.createElement('div');
+    pending.className = 'assistant-message assistant-message-bot assistant-pending';
+    pending.textContent = 'Checking your workspace...';
+    messages.appendChild(pending);
+    messages.scrollTop = messages.scrollHeight;
+    let reply;
+    if (window.CAREONE_AI_ENDPOINT) {
+      try {
+        const response = await fetch(window.CAREONE_AI_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, records: dashboardData }) });
+        if (!response.ok) throw new Error('Assistant request failed');
+        const data = await response.json();
+        reply = data.reply || data.message;
+      } catch (_) {}
+    }
+    pending.classList.remove('assistant-pending');
+    pending.textContent = reply || assistantReply(message);
+    messages.scrollTop = messages.scrollHeight;
+  });
+}
+
+const recordForm = document.getElementById('recordForm');
+if (recordForm) recordForm.addEventListener('submit', async event => { event.preventDefault(); const payload = {}; for (const [key, value] of new FormData(event.currentTarget)) { const normalized = normalize(key, value); if (normalized !== undefined) payload[key] = normalized; } await insertRecord(event.currentTarget.dataset.table, payload); closeModal(); await loadAll(); });
+initCareOneAssistant();
 loadAll();
 if (!supabaseClient) console.warn('Supabase not loaded. Records are being saved locally in browser storage.');
