@@ -23,7 +23,13 @@
     <main class="main">
       <header class="top">
         <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        <div class="top-actions">
+          <div class="auth-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+          </div>
+          <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        </div>
       </header>
 
       <section class="content">
@@ -33,9 +39,9 @@
             <h1>Caregiver Management</h1>
             <div class="sub">Scheduling, credentials, training and shift coverage.</div>
             <div class="chip-row">
-              <span class="chip"><span class="chip-icon">🧑‍⚕️</span> 19 active</span>
-              <span class="chip"><span class="chip-icon">🏅</span> 7 certified</span>
-              <span class="chip"><span class="chip-icon">🧠</span> 2 trainings</span>
+              <span class="chip"><span class="chip-icon">🧑‍⚕️</span> <span id="staffActiveCount">0 active</span></span>
+              <span class="chip"><span class="chip-icon">🏅</span> <span id="staffAgreementCount">0 agreements</span></span>
+              <span class="chip"><span class="chip-icon">🧠</span> <span id="staffTrainingCount">0 due</span></span>
             </div>
           </div>
           <div class="page-hero-visual">
@@ -48,15 +54,15 @@
         <div class="page-stat-strip">
           <div class="page-stat">
             <div class="page-stat-icon teal">👩‍⚕️</div>
-            <div><span>Staff</span><strong>19</strong></div>
+            <div><span>Staff</span><strong id="staffCountValue">0</strong></div>
           </div>
           <div class="page-stat">
             <div class="page-stat-icon blue">🧾</div>
-            <div><span>Agreements</span><strong>12</strong></div>
+            <div><span>Agreements</span><strong id="staffAgreementValue">0</strong></div>
           </div>
           <div class="page-stat">
             <div class="page-stat-icon pink">📚</div>
-            <div><span>Training</span><strong>4 due</strong></div>
+            <div><span>Training</span><strong id="staffTrainingValue">0 due</strong></div>
           </div>
         </div>
 

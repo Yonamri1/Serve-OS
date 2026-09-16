@@ -23,7 +23,13 @@
     <main class="main">
       <header class="top">
         <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        <div class="top-actions">
+          <div class="auth-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+          </div>
+          <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        </div>
       </header>
 
       <section class="content">
@@ -33,9 +39,9 @@
             <h1>Appointments</h1>
             <div class="sub">Track client visits, reasons, location and contact details.</div>
             <div class="chip-row">
-              <span class="chip"><span class="chip-icon">📅</span> 24 scheduled</span>
-              <span class="chip"><span class="chip-icon">✅</span> 18 confirmed</span>
-              <span class="chip"><span class="chip-icon">🩺</span> 4 follow-ups</span>
+              <span class="chip"><span class="chip-icon">📅</span> <span id="appointmentScheduledCount">0 scheduled</span></span>
+              <span class="chip"><span class="chip-icon">✅</span> <span id="appointmentConfirmedCount">0 confirmed</span></span>
+              <span class="chip"><span class="chip-icon">🩺</span> <span id="appointmentFollowUpCount">0 follow-ups</span></span>
             </div>
           </div>
 
@@ -51,21 +57,21 @@
             <div class="mini-stat-icon teal">📅</div>
             <div>
               <span>Today</span>
-              <strong>6 visits</strong>
+              <strong id="appointmentTodayValue">0 visits</strong>
             </div>
           </div>
           <div class="mini-stat">
             <div class="mini-stat-icon blue">👥</div>
             <div>
               <span>Clients</span>
-              <strong>14 active</strong>
+              <strong id="appointmentClientValue">0 active</strong>
             </div>
           </div>
           <div class="mini-stat">
             <div class="mini-stat-icon amber">🕒</div>
             <div>
               <span>Avg. check-in</span>
-              <strong>12 min</strong>
+              <strong id="appointmentAvgCheckinValue">0 min</strong>
             </div>
           </div>
         </div>

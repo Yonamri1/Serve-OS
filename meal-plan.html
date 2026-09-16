@@ -24,12 +24,44 @@
     <main class="main">
       <header class="top">
         <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        <div class="top-actions">
+          <div class="auth-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+          </div>
+          <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        </div>
       </header>
 
       <section class="content">
-        <h1>Meal Plans</h1>
-        <div class="sub">Track dietary plans, meals, and preferences for each client.</div>
+        <div class="page-hero">
+          <div class="page-hero-copy">
+            <div class="eyebrow"><span>✦</span> Nutrition</div>
+            <h1>Meal Plans</h1>
+            <div class="sub">Track dietary plans, meals, and preferences for each client.</div>
+            <div class="chip-row">
+              <span class="chip"><span class="chip-icon">🍽️</span> <span id="mealPlanMealsCount">0 plans</span></span>
+              <span class="chip"><span class="chip-icon">📅</span> <span id="mealPlanDaysCount">0 active days</span></span>
+              <span class="chip"><span class="chip-icon">🔔</span> <span id="mealPlanFollowUpCount">0 follow-ups</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-stat-strip">
+          <div class="page-stat">
+            <div class="page-stat-icon teal">🍽️</div>
+            <div><span>Total plans</span><strong id="mealPlanTotalCount">0</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon blue">📆</div>
+            <div><span>Active days</span><strong id="mealPlanDaysValue">0</strong></div>
+          </div>
+          <div class="page-stat">
+            <div class="page-stat-icon amber">🔔</div>
+            <div><span>Follow-ups</span><strong id="mealPlanFollowUpValue">0</strong></div>
+          </div>
+        </div>
+
         <div class="actions">
           <button class="btn" type="button" onclick="openForm('meal_plans')">+ Add Meal Plan</button>
           <a class="btn secondary" href="index.html">Back to Dashboard</a>

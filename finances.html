@@ -25,7 +25,13 @@
     <main class="main">
       <header class="top">
         <input class="search" placeholder="Search clients, staff, records…" oninput="quickSearch(this.value)">
-        <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        <div class="top-actions">
+          <div class="auth-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+          </div>
+          <div class="profile"><div><b>Administrator</b><br><small style="color:#718096">Adult Foster Home</small></div><div class="avatar">AM</div></div>
+        </div>
       </header>
 
       <section class="content">
@@ -35,9 +41,9 @@
             <h1>Finance</h1>
             <div class="sub">Track revenue, expenses, invoices and monthly cash flow.</div>
             <div class="chip-row">
-              <span class="chip"><span class="chip-icon">📈</span> +6.8%</span>
-              <span class="chip"><span class="chip-icon">💳</span> 14 invoices</span>
-              <span class="chip"><span class="chip-icon">🧾</span> 5 pending</span>
+              <span class="chip"><span class="chip-icon">📈</span> <span id="financeTrendChip">0%</span></span>
+              <span class="chip"><span class="chip-icon">💳</span> <span id="financeInvoiceChip">0 invoices</span></span>
+              <span class="chip"><span class="chip-icon">🧾</span> <span id="financePendingChip">0 pending</span></span>
             </div>
           </div>
           <div class="page-hero-visual">
@@ -50,15 +56,15 @@
         <div class="page-stat-strip">
           <div class="page-stat">
             <div class="page-stat-icon teal">📊</div>
-            <div><span>Revenue</span><strong>$18.4k</strong></div>
+            <div><span>Revenue</span><strong id="financeRevenueAmount">$0</strong></div>
           </div>
           <div class="page-stat">
             <div class="page-stat-icon blue">💸</div>
-            <div><span>Expenses</span><strong>$9.8k</strong></div>
+            <div><span>Expenses</span><strong id="financeExpenseAmount">$0</strong></div>
           </div>
           <div class="page-stat">
             <div class="page-stat-icon amber">💰</div>
-            <div><span>Net</span><strong>$8.6k</strong></div>
+            <div><span>Net</span><strong id="financeNetAmount">$0</strong></div>
           </div>
         </div>
 
@@ -67,9 +73,9 @@
           <a class="btn secondary" href="index.html">Back to Dashboard</a>
         </div>
         <div class="kpi">
-          <div class="card"><div class="label">Revenue - August</div><div class="money">$18,420</div><div class="delta">+6.8%</div></div>
-          <div class="card"><div class="label">Expenses - August</div><div class="money">$9,780</div><div class="delta">+2.1%</div></div>
-          <div class="card"><div class="label">Net Cash Flow</div><div class="money">$8,640</div><div class="delta">Healthy</div></div>
+          <div class="card"><div class="label">Revenue - August</div><div class="money" id="financeMonthRevenue">$0</div><div class="delta">Live</div></div>
+          <div class="card"><div class="label">Expenses - August</div><div class="money" id="financeMonthExpense">$0</div><div class="delta">Live</div></div>
+          <div class="card"><div class="label">Net Cash Flow</div><div class="money" id="financeMonthNet">$0</div><div class="delta">Healthy</div></div>
         </div>
         <div class="cols">
           <div class="card"><h3>Recent Transactions</h3><div id="financeRows" class="row-stack"></div></div>
