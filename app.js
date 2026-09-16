@@ -442,9 +442,9 @@ function initCareOneAssistant() {
   const messages = widget.querySelector('.assistant-messages');
   const form = widget.querySelector('.assistant-form');
   const input = form.querySelector('input');
-  const setOpen = (open) => { panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); if (open) input.focus(); };
+  const setOpen = (open) => { panel.hidden = !open; panel.setAttribute('aria-hidden', String(!open)); launcher.setAttribute('aria-expanded', String(open)); if (open) input.focus(); };
   launcher.addEventListener('click', () => setOpen(panel.hidden));
-  close.addEventListener('click', () => setOpen(false));
+  close.addEventListener('click', (event) => { event.preventDefault(); setOpen(false); launcher.focus(); });
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = input.value.trim();
